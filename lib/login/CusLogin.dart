@@ -82,7 +82,7 @@ class _CusLoginState extends State<CusLogin> {
                           style: TextStyle(
                             color: AppData.primaryColor,
                             fontSize: 18,
-                            fontWeight: FontWeight.w500
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
                       ],
@@ -132,12 +132,14 @@ class _CusLoginState extends State<CusLogin> {
                     width: _width -40,
                     child: Text(
                       "Create a account ?",
+                      // textAlign: TextAlign.right,
                       style: TextStyle(
                         color: AppData.primaryColor,
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         decoration: TextDecoration.underline,
-                        height: 1.5
+                        height: 1.5,
+                        backgroundColor: Colors.white
                       ),
                     ),
                   ),

@@ -33,13 +33,13 @@ class _LoginBaseState extends State<LoginBase> {
           height:_height,
           decoration: new BoxDecoration(
             color:  AppData.blackColor,
-            // image: new DecorationImage(
-            //   fit: BoxFit.cover,
-            //   colorFilter: new ColorFilter.mode(AppData.whiteColor.withOpacity(0.7), BlendMode.softLight),
-            //   image: new AssetImage(
-            //     "assets/background.png",
-            //   ),
-            // ),
+            image: new DecorationImage(
+              fit: BoxFit.cover,
+              colorFilter: new ColorFilter.mode(AppData.whiteColor.withOpacity(0.7), BlendMode.softLight),
+              image: new AssetImage(
+                "assets/background.jpg",
+              ),
+            ),
           ),
           child: Stack(
             children: [
