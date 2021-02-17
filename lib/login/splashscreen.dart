@@ -19,70 +19,95 @@ class _SplashScreenState extends State<SplashScreen> {
       _width = MediaQuery.of(context).size.width;
       _height = MediaQuery.of(context).size.height;
     });
-    return SafeArea(
-      child: (
-        Container(
-          width :_width,
-          height :_height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                height: 200,
-                width: 200,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  boxShadow: [
-                    BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25)),
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.25),
-                      blurRadius: 12.0,
-                      spreadRadius: 3.0,
-                      offset: Offset(
-                        1.0,
-                        1.0,
-                      ),
-                    )
-                  ],
-                  image: new DecorationImage(
-                    fit: BoxFit.cover,
-                    image: new AssetImage(
-                      "assets/logo.jpeg",
-                    ),
+    return Container(
+      width :_width,
+      height :_height,
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              width :_width,
+              height :_height,
+              decoration: new BoxDecoration(
+                color:  AppData.blackColor,
+                image: new DecorationImage(
+                  fit: BoxFit.fill,
+                  alignment:Alignment.topCenter,
+                  colorFilter: new ColorFilter.mode(AppData.whiteColor.withOpacity(0.7), BlendMode.softLight),
+                  image: new AssetImage(
+                    "assets/background.jpg",
                   ),
                 ),
               ),
-              Column(
-                children: [
+            ),
+          ),
+          SafeArea(
+            child: (
+              Container(
+                width :_width,
+                height :_height,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 200,
+                      width: 200,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        boxShadow: [
+                          BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25)),
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.25),
+                            blurRadius: 12.0,
+                            spreadRadius: 3.0,
+                            offset: Offset(
+                              1.0,
+                              1.0,
+                            ),
+                          )
+                        ],
+                        image: new DecorationImage(
+                          fit: BoxFit.cover,
+                          image: new AssetImage(
+                            "assets/logo.jpeg",
+                          ),
+                        ),
+                      ),
+                    ),
+                    Column(
+                      children: [
 
-                  CustomButton(
-                    text: "Passenger", 
-                    buttonClick: (){
-                      widget.goToPage(LoginPageList.CusLogin);
-                    }
-                  ),
+                        CustomButton(
+                          text: "Passenger", 
+                          buttonClick: (){
+                            widget.goToPage(LoginPageList.CusLogin);
+                          }
+                        ),
 
-                  SizedBox(
-                    height: 20,
-                  ),
+                        SizedBox(
+                          height: 20,
+                        ),
 
-                  CustomButton(
-                    text: "Bus Owner", 
-                    buttonClick: (){
-                      widget.goToPage(LoginPageList.BusLogin);
-                    }
-                  ),
+                        CustomButton(
+                          text: "Bus Owner", 
+                          buttonClick: (){
+                            widget.goToPage(LoginPageList.BusLogin);
+                          }
+                        ),
 
-                  
-                ],
+                        
+                      ],
+                    )
+
+
+                
+                  ],
+                )
+                //child: child,
               )
-
-
-          
-            ],
-          )
-          //child: child,
-        )
+            ),
+          ),
+        ],
       ),
     );
   }

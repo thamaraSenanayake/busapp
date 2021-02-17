@@ -14,6 +14,66 @@ class CusSigning extends StatefulWidget {
 class _CusSigningState extends State<CusSigning> {
   double _width =0.0;
   double _height =0.0;
+  
+  String _email= "";
+  String _name= "";
+  String _phone= "";
+  String _idNumbe= "";
+  String _password= "";
+  String _confirmPassword= "";
+
+  String _emailError= "";
+  String _nameError= "";
+  String _phoneError= "";
+  String _idNumbeError= "";
+  String _passwordError= "";
+  String _confirmPasswordError= "";
+
+  _signIn(){
+    bool _validation = true;
+    if(_email.isEmpty){
+      setState(() {
+        _emailError = "Required field";
+        _validation = false;
+      });
+    }
+    if(_name.isEmpty){
+      setState(() {
+        _nameError = "Required field";
+        _validation = false;
+      });
+    }
+    if(_phone.isEmpty){
+      setState(() {
+        _phoneError = "Required field";
+        _validation = false;
+      });
+    }
+    if(_idNumbe.isEmpty){
+      setState(() {
+        _idNumbeError = "Required field";
+        _validation = false;
+      });
+    }
+    if(_password.isEmpty){
+      setState(() {
+        _passwordError = "Required field";
+        _validation = false;
+      });
+    }
+    if(_confirmPassword.isEmpty){
+      setState(() {
+        _confirmPasswordError = "Required field";
+        _validation = false;
+      });
+    }
+
+    if(_validation){
+      //todo
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -24,10 +84,27 @@ class _CusSigningState extends State<CusSigning> {
       Container(
       width :_width,
       height :_height,
-      child: SafeArea(
-        child: Stack(
-          children: [
-            Padding(
+      child: Stack(
+        children: [
+          SingleChildScrollView(
+            child: Container(
+              width :_width,
+              height :_height,
+              decoration: new BoxDecoration(
+                color:  AppData.blackColor,
+                image: new DecorationImage(
+                  fit: BoxFit.fill,
+                                    alignment:Alignment.topCenter,
+                  colorFilter: new ColorFilter.mode(AppData.whiteColor.withOpacity(0.7), BlendMode.softLight),
+                  image: new AssetImage(
+                    "assets/background.jpg",
+                  ),
+                ),
+              ),
+            ),
+          ),
+          SafeArea(
+            child: Padding(
               padding: const EdgeInsets.only(top:50.0),
               child: SingleChildScrollView(
                 child: Column(
@@ -42,6 +119,7 @@ class _CusSigningState extends State<CusSigning> {
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Email: ",
@@ -52,6 +130,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _emailError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -59,15 +147,19 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _email = val;
+                              setState(() {
+                                _emailError = "";
+                              });
                             }, 
-                            errorText: ""
+                            errorText: _emailError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Name: ",
@@ -78,6 +170,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _nameError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -85,15 +187,19 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _name = val;
+                              setState(() {
+                                _nameError = "";
+                              });
                             }, 
-                            errorText: ""
+                            errorText: _nameError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Phone: ",
@@ -104,6 +210,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _phoneError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -111,15 +227,19 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _phone = val;
+                              setState(() {
+                                _phoneError = "";
+                              });
                             }, 
-                            errorText: ""
+                            errorText: _phoneError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Id number: ",
@@ -130,6 +250,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _idNumbeError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -137,15 +267,19 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _idNumbe = val;
+                              setState(() {
+                                _idNumbeError = "";
+                              });;
                             }, 
-                            errorText: ""
+                            errorText: _idNumbeError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Password: ",
@@ -156,6 +290,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _passwordError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -163,15 +307,19 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _password = val;
+                              setState(() {
+                                _passwordError = "";
+                              });
                             }, 
-                            errorText: ""
+                            errorText: _passwordError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
                             child: Container(
                               width: _width - 40,
                               child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Confirm Password: ",
@@ -182,6 +330,16 @@ class _CusSigningState extends State<CusSigning> {
                                       backgroundColor: Colors.white
                                     ),
                                   ),
+                                  Text(
+                                    _confirmPasswordError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  
                                 ],
                               ),
                             ),
@@ -189,9 +347,12 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-
+                              _confirmPassword = val;
+                              setState(() {
+                                _confirmPasswordError = "";
+                              });
                             }, 
-                            errorText: ""
+                            errorText: _confirmPasswordError
                           ),
                           SizedBox(
                             height: 50,
@@ -202,14 +363,16 @@ class _CusSigningState extends State<CusSigning> {
                     CustomButton(
                       text: "Sign In", 
                       buttonClick: (){
-                        // widget.goToPage(LoginPageList.BusLogin);
+                        _signIn();
                       }
                     )
                   ],
                 ),
               ),
             ),
-            Container(
+          ),
+          SafeArea(
+            child: Container(
               width: _width,
               height: 50,
               padding: EdgeInsets.symmetric(horizontal:20),
@@ -241,7 +404,7 @@ class _CusSigningState extends State<CusSigning> {
                         color: AppData.primaryColor,
                         fontSize: 35,
                         fontWeight: FontWeight.w700,
-                        backgroundColor: Colors.white
+                        // backgroundColor: Colors.white
                       ),
                     ),
                   ),
@@ -249,8 +412,8 @@ class _CusSigningState extends State<CusSigning> {
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

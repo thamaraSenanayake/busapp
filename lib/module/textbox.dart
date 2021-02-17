@@ -101,7 +101,7 @@ class _TextBoxState extends State<TextBox> {
       ),
       child: TextField(
         style: TextStyle(
-          color: AppData.primaryColor, 
+          color: AppData.blackColor, 
           fontSize: widget.prefixIcon == Icons.attach_money?18:15,
           fontWeight: FontWeight.w500
         ),
