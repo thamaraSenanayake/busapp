@@ -1,0 +1,26 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:quickbussl/model/seat.dart';
+
+class Trip{
+  String busOwnerEmail;
+  DateTime startDate;
+  DateTime endDate;
+  String startLocation;
+  String endLocation;
+  LatLng currentLocation;
+  BusType busType;
+  List<Seat> seatCount;
+  List<String> userList;
+}
+
+enum BusType{
+  Small,
+  Medium,
+  Large
+}
+
+class BusSeatCount{
+  static const int SMALL = 10;
+  static const int MEDIUM = 20;
+  static const int LARGE = 30;
+}

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quickbussl/database/database.dart';
+import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/textbox.dart';
 import '../const.dart';
@@ -15,47 +17,44 @@ class _CusSigningState extends State<CusSigning> {
   double _width =0.0;
   double _height =0.0;
   
-  String _email= "";
-  String _name= "";
-  String _phone= "";
-  String _idNumbe= "";
-  String _password= "";
+  User _user = User();
+  
   String _confirmPassword= "";
 
   String _emailError= "";
   String _nameError= "";
   String _phoneError= "";
-  String _idNumbeError= "";
+  String _idNumberError= "";
   String _passwordError= "";
   String _confirmPasswordError= "";
 
   _signIn(){
     bool _validation = true;
-    if(_email.isEmpty){
+    if(_user.email != null && _user.email.isEmpty){
       setState(() {
         _emailError = "Required field";
         _validation = false;
       });
     }
-    if(_name.isEmpty){
+    if(_user.name != null && _user.name.isEmpty){
       setState(() {
         _nameError = "Required field";
         _validation = false;
       });
     }
-    if(_phone.isEmpty){
+    if(_user.phone != null && _user.phone.isEmpty){
       setState(() {
         _phoneError = "Required field";
         _validation = false;
       });
     }
-    if(_idNumbe.isEmpty){
+    if(_user.idNum != null && _user.idNum.isEmpty){
       setState(() {
-        _idNumbeError = "Required field";
+        _idNumberError = "Required field";
         _validation = false;
       });
     }
-    if(_password.isEmpty){
+    if(_user.password != null && _user.password.isEmpty){
       setState(() {
         _passwordError = "Required field";
         _validation = false;
@@ -69,7 +68,7 @@ class _CusSigningState extends State<CusSigning> {
     }
 
     if(_validation){
-      //todo
+      Database().addUser(_user);
     }
   }
 
@@ -147,7 +146,7 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-                              _email = val;
+                              _user.email = val;
                               setState(() {
                                 _emailError = "";
                               });
@@ -187,7 +186,7 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-                              _name = val;
+                              _user.name = val;
                               setState(() {
                                 _nameError = "";
                               });
@@ -227,7 +226,7 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-                              _phone = val;
+                              _user.phone = val;
                               setState(() {
                                 _phoneError = "";
                               });
@@ -251,7 +250,7 @@ class _CusSigningState extends State<CusSigning> {
                                     ),
                                   ),
                                   Text(
-                                    _idNumbeError,
+                                    _idNumberError,
                                     style: TextStyle(
                                       color: AppData.primaryColor,
                                       fontSize: 18,
@@ -267,12 +266,12 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-                              _idNumbe = val;
+                              _user.idNum = val;
                               setState(() {
-                                _idNumbeError = "";
+                                _idNumberError = "";
                               });;
                             }, 
-                            errorText: _idNumbeError
+                            errorText: _idNumberError
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
@@ -307,7 +306,7 @@ class _CusSigningState extends State<CusSigning> {
                           TextBox(
                             textBoxKey: null, 
                             onChange: (val){
-                              _password = val;
+                              _user.password = val;
                               setState(() {
                                 _passwordError = "";
                               });

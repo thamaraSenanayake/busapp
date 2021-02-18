@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:quickbussl/database/database.dart';
+import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/textbox.dart';
 
@@ -17,10 +19,11 @@ class _CusLoginState extends State<CusLogin> {
   String _password = '';
   String _emailError = '';
   String _passwordError = '';
+  String _loginError = '';
   double _width =0.0;
   double _height =0.0;
 
-  _login(){
+  _login() async {
     bool _validation = true;
     if(_email.isEmpty){
       setState(() {
@@ -36,7 +39,14 @@ class _CusLoginState extends State<CusLogin> {
     }
 
     if(_validation){
-      //todo
+      User user = await Database().login(_email, _password);
+      if(user != null){
+
+      }else{
+        setState(() {
+          _loginError = "Invalid user details";
+        });
+      }
     }
   }
 
@@ -200,6 +210,18 @@ class _CusLoginState extends State<CusLogin> {
                   ),
                   Column(
                     children: [
+                      Text(
+                        _loginError,
+                        style: TextStyle(
+                          color: AppData.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
                       CustomButton(
                         text: "Login", 
                         buttonClick: (){
