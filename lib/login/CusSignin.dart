@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
+import 'package:quickbussl/login/CusLogin.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/textbox.dart';
@@ -18,6 +21,7 @@ class _CusSigningState extends State<CusSigning> {
   double _height =0.0;
   
   User _user = User();
+  bool _loading = false;
   
   String _confirmPassword= "";
 
@@ -29,6 +33,8 @@ class _CusSigningState extends State<CusSigning> {
   String _confirmPasswordError= "";
 
   _signIn(){
+    FocusScope.of(context).unfocus();
+
     bool _validation = true;
     if(_user.email != null && _user.email.isEmpty){
       setState(() {
@@ -68,7 +74,21 @@ class _CusSigningState extends State<CusSigning> {
     }
 
     if(_validation){
+      setState(() {
+        _loading = true;
+      });
       Database().addUser(_user);
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => CusProfile(
+            user: _user,
+          )
+        )
+      );
+      setState(() {
+        _loading = false;
+      });
     }
   }
 
@@ -151,6 +171,7 @@ class _CusSigningState extends State<CusSigning> {
                                 _emailError = "";
                               });
                             }, 
+                            textInputType:TextInputType.emailAddress,
                             errorText: _emailError
                           ),
                           Padding(
@@ -231,7 +252,9 @@ class _CusSigningState extends State<CusSigning> {
                                 _phoneError = "";
                               });
                             }, 
-                            errorText: _phoneError
+                            errorText: _phoneError,
+                          textInputType:TextInputType.phone,
+
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
@@ -269,9 +292,11 @@ class _CusSigningState extends State<CusSigning> {
                               _user.idNum = val;
                               setState(() {
                                 _idNumberError = "";
-                              });;
+                              });
                             }, 
-                            errorText: _idNumberError
+                            errorText: _idNumberError,
+                            // textInputType:TextInputType.text,
+
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top:10.0,bottom: 5),
@@ -311,6 +336,7 @@ class _CusSigningState extends State<CusSigning> {
                                 _passwordError = "";
                               });
                             }, 
+                            obscureText: true,
                             errorText: _passwordError
                           ),
                           Padding(
@@ -351,6 +377,7 @@ class _CusSigningState extends State<CusSigning> {
                                 _confirmPasswordError = "";
                               });
                             }, 
+                            obscureText: true,
                             errorText: _confirmPasswordError
                           ),
                           SizedBox(
@@ -412,6 +439,15 @@ class _CusSigningState extends State<CusSigning> {
               ),
             ),
           ),
+          _loading
+          ? Container(
+            color: Color.fromRGBO(128, 128, 128, 0.3),
+            child: SpinKitDoubleBounce(
+              color: AppData.primaryColor,
+              size: 50.0,
+            ),
+          )
+          : Container(),
         ],
       ),
     );

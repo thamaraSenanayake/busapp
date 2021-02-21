@@ -5,7 +5,8 @@ import '../const.dart';
 class CustomButton extends StatefulWidget {
   final String text;
   final Function buttonClick;
-  CustomButton({Key key,@required this.text,@required this.buttonClick}) : super(key: key);
+  final bool shadow;
+  CustomButton({Key key,@required this.text,@required this.buttonClick, this.shadow = true}) : super(key: key);
 
   @override
   _CustomButtonState createState() => _CustomButtonState();
@@ -29,9 +30,9 @@ class _CustomButtonState extends State<CustomButton> {
           color: AppData.primaryColor,
           // borderRadius: BorderRadius.circular(3),
           boxShadow: [
-            BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25)),
+            widget.shadow? BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25)):BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.0)),
             BoxShadow(
-              color: Color.fromRGBO(0, 0, 0, 0.25),
+              color:widget.shadow? Color.fromRGBO(0, 0, 0, 0.25):Color.fromRGBO(0, 0, 0, 0.0),
               blurRadius: 12.0,
               spreadRadius: 3.0,
               offset: Offset(

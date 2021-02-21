@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
@@ -22,8 +24,10 @@ class _CusLoginState extends State<CusLogin> {
   String _loginError = '';
   double _width =0.0;
   double _height =0.0;
+  bool _loading = false;
 
   _login() async {
+    FocusScope.of(context).unfocus();
     bool _validation = true;
     if(_email.isEmpty){
       setState(() {
@@ -39,9 +43,19 @@ class _CusLoginState extends State<CusLogin> {
     }
 
     if(_validation){
+      setState(() {
+        _loginError = "";
+      });
       User user = await Database().login(_email, _password);
       if(user != null){
-
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CusProfile(
+              user: user,
+            )
+          )
+        );
       }else{
         setState(() {
           _loginError = "Invalid user details";
@@ -163,6 +177,8 @@ class _CusLoginState extends State<CusLogin> {
                             _emailError = "";
                           });
                         }, 
+                        textInputType:TextInputType.emailAddress,
+                        firstLetterCapital: false,
                         errorText: _emailError
                       ),
                       Padding(
@@ -202,6 +218,7 @@ class _CusLoginState extends State<CusLogin> {
                             _passwordError = "";
                           });
                         }, 
+                        obscureText: true,
                         errorText: _passwordError
                       ),
 
@@ -243,6 +260,16 @@ class _CusLoginState extends State<CusLogin> {
               ),
             ),
           ),
+
+          _loading
+          ? Container(
+            color: Color.fromRGBO(128, 128, 128, 0.3),
+            child: SpinKitDoubleBounce(
+              color: AppData.primaryColor,
+              size: 50.0,
+            ),
+          )
+          : Container(),
         ],
       ),
     );
