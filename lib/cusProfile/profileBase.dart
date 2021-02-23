@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
-import 'package:quickbussl/cusProfile/addLocation.dart';
+import 'package:quickbussl/cusProfile/addTicket/addTicket.dart';
 import 'package:quickbussl/cusProfile/bookedHistory.dart';
 import 'package:quickbussl/cusProfile/bookedTrip.dart';
 import 'package:quickbussl/model/trip.dart';
@@ -77,48 +77,17 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 40,
-                          width: _width,
-                          // decoration: BoxDecoration(
-                          //   color: AppData.primaryColor,
-                          // ),
-                          child: Stack(
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.menu,
-                                      color:AppData.primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  _title,
-                                  style: TextStyle(
-                                    color: AppData.primaryColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
                         Expanded(
                           child:TabBarView(
                             physics: NeverScrollableScrollPhysics(),
                             controller:_tabController,
                             children: [
-                              AddLocation(trip: _trip,),
+                              AddTicketBase(
+                                trip: _trip, 
+                                // search: (){
+                                //   // _profilePage = Profile
+                                // },
+                              ),
                               BookedTrip(trip: _trip,),
                               BookedHistory(trip: _trip),
                             ],

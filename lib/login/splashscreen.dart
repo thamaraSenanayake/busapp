@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quickbussl/const.dart';
+import 'package:quickbussl/cusProfile/profileBase.dart';
+import 'package:quickbussl/database/database.dart';
+import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -13,6 +18,40 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   double _width =0.0;
   double _height =0.0;
+  bool _checking = true;
+
+  _autoLogin() async {
+    final storage = new FlutterSecureStorage();
+    String username = await storage.read(key: KeyContainer.USERNAME);
+    String password = await storage.read(key: KeyContainer.PASSWORD);
+    
+    if(username != null && password != null){
+      User user =await Database().login(username, password);
+
+      if(user != null){
+        if(user.userType == UserType.Passenger){
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CusProfile(
+                user: user,
+              )
+            )
+          );
+        }
+      }
+    }
+    setState(() {
+      _checking = false;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _autoLogin();
+  }
+  
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -74,7 +113,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         ),
                       ),
                     ),
-                    Column(
+                    !_checking? Column(
                       children: [
 
                         CustomButton(
@@ -97,6 +136,12 @@ class _SplashScreenState extends State<SplashScreen> {
 
                         
                       ],
+                    ):Container(
+                      color: Color.fromRGBO(128, 128, 128, 0.3),
+                      child: SpinKitDoubleBounce(
+                        color: AppData.primaryColor,
+                        size: 50.0,
+                      ),
                     )
 
 

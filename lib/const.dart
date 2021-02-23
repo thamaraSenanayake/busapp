@@ -14,4 +14,10 @@ class AppData{
   static Color primaryColor2= Color(0xfff17171);
   static Color whiteColor= Color(0xFFFFFBFB);
   static Color blackColor= Color(0xff393939);
+  static Color greenColor = Color(0xff70b545);
+}
+
+class KeyContainer {
+  static const String USERNAME = 'username';
+  static const String PASSWORD = 'password';
 }

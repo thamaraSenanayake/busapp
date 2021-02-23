@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
@@ -48,6 +49,9 @@ class _CusLoginState extends State<CusLogin> {
       });
       User user = await Database().login(_email, _password);
       if(user != null){
+        final storage = new FlutterSecureStorage();
+        storage.write(key: KeyContainer.USERNAME,value: _email);
+        storage.write(key: KeyContainer.PASSWORD,value: _password);
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -62,6 +66,11 @@ class _CusLoginState extends State<CusLogin> {
         });
       }
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override

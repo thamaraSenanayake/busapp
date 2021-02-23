@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
@@ -74,10 +75,14 @@ class _CusSigningState extends State<CusSigning> {
     }
 
     if(_validation){
+      _user.userType = UserType.Passenger;
       setState(() {
         _loading = true;
       });
       Database().addUser(_user);
+      final storage = new FlutterSecureStorage();
+      storage.write(key: KeyContainer.USERNAME,value: _user.email);
+      storage.write(key: KeyContainer.PASSWORD,value: _user.password);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

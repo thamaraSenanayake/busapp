@@ -3,8 +3,9 @@ import 'package:quickbussl/model/seat.dart';
 
 class Trip{
   String busOwnerEmail;
-  DateTime startDate;
-  DateTime endDate;
+  DateTime startTime;
+  DateTime endTime;
+  DateTime travelDate;
   String startLocation;
   String endLocation;
   LatLng currentLocation;

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "533310506621",
+    "project_id": "busapp-89a4a",
+    "storage_bucket": "busapp-89a4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533310506621:android:ac9686f6d9c7ed37f11314",
+        "android_client_info": {
+          "package_name": "com.example.quickbussl"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533310506621-6gn1851cbcgg0kd1d3b04sepbnptdkv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBaobuePmvgUwK0WM3H_QL2gStSwfioM5s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533310506621-6gn1851cbcgg0kd1d3b04sepbnptdkv9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "533310506621-6rb34edshnus07lold9kar25rscd0g7e.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quickbussl"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

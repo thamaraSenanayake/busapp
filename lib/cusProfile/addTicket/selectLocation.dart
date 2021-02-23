@@ -4,33 +4,66 @@ import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/customDatePicker.dart';
 import 'package:quickbussl/module/customDropDown.dart';
 
-import '../const.dart';
-
-class AddLocation extends StatefulWidget {
+import '../../const.dart';
+class SelectLocation extends StatefulWidget {
   final Trip trip;
-  AddLocation({Key key,@required this.trip}) : super(key: key);
+  final Function nextPage;
+  SelectLocation({Key key, @required this.trip,@required this.nextPage}) : super(key: key);
 
   @override
-  _AddLocationState createState() => _AddLocationState();
+  _SelectLocationState createState() => _SelectLocationState();
 }
 
-class _AddLocationState extends State<AddLocation> {
+class _SelectLocationState extends State<SelectLocation> {
+
   List<String> _departure = ['one','two','three','four','five'];
   List<String> _arrive = ['one','two','three','four','five'];
   double _width = 0.0;
   String _departureError = '';
   String _arriveError = '';
   String _dateError = '';
+  String _selectedDeparture = '';
+  String _selectedArrive = '';
+  DateTime _selectedDate;
+
+  _search(){
+    widget.nextPage();
+  }
+
+  _initValue(){
+    if(widget.trip.startLocation != null){
+      _selectedDeparture = widget.trip.startLocation;
+    }else{
+      _selectedDeparture = _departure[0];
+    }
+
+    if(widget.trip.endLocation != null){
+      _selectedArrive = widget.trip.endLocation;
+    }else{
+      _selectedArrive = _departure[0];
+    }
+
+    if(widget.trip.travelDate != null){
+      _selectedDate = widget.trip.travelDate;
+    }else{
+      _selectedDate = DateTime.now();
+    }
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _initValue();
+  }
 
   @override
   Widget build(BuildContext context) {
     setState(() {
       _width = MediaQuery.of(context).size.width;
     });
-    return Container(
-      child:Column(
-        children: [
-          Padding(
+    return Column(
+      children: [
+        Padding(
             padding: const EdgeInsets.only(top:10.0,bottom: 5),
             child: Container(
               width: _width - 40,
@@ -63,6 +96,7 @@ class _AddLocationState extends State<AddLocation> {
             list: _departure, 
             onChange: (val){
               print(val);
+              widget.trip.startLocation = val;
             }, 
             selectedText: _departure[0]
           ),
@@ -102,6 +136,7 @@ class _AddLocationState extends State<AddLocation> {
             list: _arrive, 
             onChange: (val){
               print(val);
+              widget.trip.endLocation = val;
             }, 
             selectedText: _arrive[0]
           ),
@@ -140,14 +175,13 @@ class _AddLocationState extends State<AddLocation> {
           CustomDatePicker(
             initDate: DateTime.now(), 
             onChange: (val){
-              // widget.trip.startDate = val;
+              widget.trip.travelDate = val;
             }, 
             title: "Date"
           ),
           SizedBox(height:50),
-          CustomButton(text: "Search", buttonClick: (){},shadow: false,)
-        ],
-      ),
+          CustomButton(text: "Search", buttonClick:(){_search();},shadow: false,)
+      ],
     );
   }
 }
