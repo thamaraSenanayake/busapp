@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:quickbussl/const.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/module/busTripDisplay.dart';
 

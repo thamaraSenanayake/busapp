@@ -2,16 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:quickbussl/cusProfile/addTicket/selectBus.dart';
 import 'package:quickbussl/cusProfile/addTicket/selectLocation.dart';
 import 'package:quickbussl/cusProfile/addTicket/selectSeat.dart';
+import 'package:quickbussl/cusProfile/addTicket/summery.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/model/trip.dart';
+import 'package:quickbussl/model/user.dart';
 
 import '../../const.dart';
 
 
 class AddTicketBase extends StatefulWidget {
   final Trip trip;
+  final User user;
+  final ProfileBaseListener listener;
   // final Function search;
-  AddTicketBase({Key key,@required this.trip}) : super(key: key);
+  AddTicketBase({Key key,@required this.trip,@required this.user,@required this.listener}) : super(key: key);
 
   @override
   _AddTicketStateBase createState() => _AddTicketStateBase();
@@ -46,6 +50,12 @@ class _AddTicketStateBase extends State<AddTicketBase> {
         _profilePage = CusProfilePages.SelectBus;
       });
     }
+    if(_profilePage == CusProfilePages.PayForSeat){
+      setState(() {
+        _title = "Enter Location";
+        _profilePage = CusProfilePages.SelectSeat;
+      });
+    }
   }
 
   @override
@@ -66,6 +76,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
               children: [
                 _profilePage == CusProfilePages.SelectLocation?GestureDetector(
                   onTap: (){
+                    widget.listener.openDrawer();
                   },
                   child: Container(
                     height: 70,
@@ -130,9 +141,16 @@ class _AddTicketStateBase extends State<AddTicketBase> {
               trip: widget.trip, 
               nextPage: (int seatNum){
                 setState(() {
-                  _title = "Select Seat";
-                  _profilePage=CusProfilePages.SelectSeat;
+                  _title = "Confirm Payment";
+                  _profilePage=CusProfilePages.PayForSeat;
                 });
+              }
+            ):_profilePage==CusProfilePages.PayForSeat?
+            Summery(
+              trip: widget.trip, 
+              user: widget.user,
+              nextPage: (){
+                widget.listener.moveToPage(CusProfilePages.BookedTrip);
               }
             ):
             Container(),

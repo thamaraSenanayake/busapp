@@ -4,7 +4,10 @@ class Seat{
   String email;
   int number;
   int status;
-  LatLng location;
+  LatLng getInLocation;
+  LatLng getOutLocation;
+  String getInPlace;
+  String getOutPlace;
 }
 
 // status = 3 unavailable 

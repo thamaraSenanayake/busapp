@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/model/trip.dart';
 
 class BookedHistory extends StatefulWidget {
   final Trip trip;
-  BookedHistory({Key key, this.trip}) : super(key: key);
+  final ProfileBaseListener listener;
+  BookedHistory({Key key, this.trip,@required this.listener}) : super(key: key);
 
   @override
   _BookedHistoryState createState() => _BookedHistoryState();

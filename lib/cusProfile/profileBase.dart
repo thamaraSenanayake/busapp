@@ -16,7 +16,7 @@ class CusProfile extends StatefulWidget {
   _CusProfileState createState() => _CusProfileState();
 }
 
-class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
+class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin implements ProfileBaseListener {
   double _height  =0.0;
   double _width =0.0;
   bool _bottomBarVisibility = true;
@@ -24,6 +24,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
   CusProfilePages _profilePage =CusProfilePages.Add;
   TabController _tabController;
   Trip _trip = Trip();
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 
   @override
   void initState() {
@@ -48,6 +50,17 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
       child: WillPopScope(
         onWillPop:_onBackPressed,
         child: Scaffold(
+          key: _scaffoldKey,
+          drawer: Theme(
+            data: Theme.of(context).copyWith(
+              canvasColor: AppData.primaryColor,
+            ),
+            child:Drawer(
+              child: ListView(
+                children: _appDrawerContent(),
+              ),
+            ),
+          ),
           body: Container(
             height:_height,
             width:_width,
@@ -84,12 +97,14 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
                             children: [
                               AddTicketBase(
                                 trip: _trip, 
+                                user: widget.user,
+                                listener: this,
                                 // search: (){
                                 //   // _profilePage = Profile
                                 // },
                               ),
-                              BookedTrip(trip: _trip,),
-                              BookedHistory(trip: _trip),
+                              BookedTrip(trip: _trip,listener: this,),
+                              BookedHistory(trip: _trip,listener: this,),
                             ],
                           )
                         ),
@@ -205,6 +220,180 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin {
         
   }
 
+  List<Widget> _appDrawerContent() {
+    return [
+      Container(
+        height: 300,
+        child: Padding(
+          padding:  EdgeInsets.only(left: 20.0, right: 20.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding:  EdgeInsets.only(bottom: 50.0),
+                child: Center(
+                  child: Container(
+                      height: 120,
+                      child: Image.asset(
+                        'assets/logo.jpeg',
+                        fit: BoxFit.fill,
+                      )),
+                ),
+              ),
+              Text(
+                widget.user.name,
+                style: TextStyle(color: AppData.whiteColor, fontSize: 17,fontWeight: FontWeight.w600),
+              ),
+              
+              SizedBox(
+                height:5
+              ),
+
+              Text(
+                widget.user.email,
+                style: TextStyle(color: AppData.whiteColor, fontSize: 17,fontWeight: FontWeight.w600),
+              ),
+
+              
+              SizedBox(
+                height:5
+              ),
+
+              
+              SizedBox(
+                height:5
+              ),
+
+
+            ],
+          ),
+        ),
+      ),
+      Container(
+        height: _height-300,
+        color: AppData.whiteColor,
+        child: Column(
+          children: [
+
+            Container(
+              color: AppData.primaryColor,
+              child: Padding(
+                padding:  EdgeInsets.symmetric(horizontal: 10.0),
+                child: Container(
+                  color: AppData.blackColor,
+                  height: 5,
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            ListTile(
+              title: Text(
+                "Edit Details",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.description,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Change password",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.enhanced_encryption,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Privacy Policy",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.privacy_tip,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "About us",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.info,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Rate us",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.rate_review,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+            ListTile(
+              title: Text(
+                "Log Out",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.exit_to_app,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+              },
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  @override
+  moveToPage(CusProfilePages page) {
+    if(CusProfilePages.SelectLocation == page){
+      _tabController.animateTo(0);
+    }else if(CusProfilePages.BookedTrip == page){
+      _tabController.animateTo(1);
+    }else if(CusProfilePages.BookedHistory == page){
+      _tabController.animateTo(2);
+    }
+  }
+
+  @override
+  openDrawer() {
+    _scaffoldKey.currentState.openDrawer();
+  }
+
+}
+
+abstract class ProfileBaseListener{
+  moveToPage(CusProfilePages page);
+  openDrawer();
 }
 
 enum CusProfilePages{

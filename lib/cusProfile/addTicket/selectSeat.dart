@@ -273,7 +273,7 @@ class _SelectSeatState extends State<SelectSeat> {
           ),
           Padding(
             padding: const EdgeInsets.only(top:5.0),
-            child: CustomButton(text: "Done", buttonClick: null),
+            child: CustomButton(text: "Done", buttonClick: (){widget.nextPage(1);}),
           )
         ],
       ),
