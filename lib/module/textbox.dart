@@ -16,6 +16,7 @@ class TextBox extends StatefulWidget {
   final TextEditingController textEditingController;
   final String errorText;
   final bool shadowDisplay;
+  final bool enable;
   TextBox({
     Key key,
     @required this.textBoxKey,
@@ -30,7 +31,8 @@ class TextBox extends StatefulWidget {
     this.firstLetterCapital = true, 
     this.textEditingController,
     @required this.errorText, 
-    this.shadowDisplay = true,
+    this.shadowDisplay = true, 
+    this.enable = true,
   }) : super(key: key);
 
   @override
@@ -127,6 +129,7 @@ class _TextBoxState extends State<TextBox> {
         onSubmitted: (value) {
           widget.onSubmit(value);
         },
+        enabled: widget.enable,
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:quickbussl/busowner/TripHistory.dart';
+import 'package:quickbussl/busowner/addTrip.dart';
+import 'package:quickbussl/busowner/onGoing.dart';
 import 'package:quickbussl/cusProfile/addTicket/addTicket.dart';
 import 'package:quickbussl/cusProfile/bookedHistory.dart';
 import 'package:quickbussl/cusProfile/bookedTrip.dart';
@@ -10,20 +13,20 @@ import 'package:quickbussl/model/user.dart';
 
 import '../const.dart';
 
-class CusProfile extends StatefulWidget {
+class BusOwnerProfile extends StatefulWidget {
   final User user;
-  CusProfile({Key key,@required this.user}) : super(key: key);
+  BusOwnerProfile({Key key,@required this.user}) : super(key: key);
 
   @override
-  _CusProfileState createState() => _CusProfileState();
+  _BusOwnerProfileState createState() => _BusOwnerProfileState();
 }
 
-class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin implements ProfileBaseListener {
+class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderStateMixin implements BusOwnerProfileBaseListener {
   double _height  =0.0;
   double _width =0.0;
   bool _bottomBarVisibility = true;
-  String _title = "Enter Location";
-  CusProfilePages _profilePage =CusProfilePages.Add;
+  String _title = "Add Trip";
+  BusOwnerPages _profilePage =BusOwnerPages.AddTrip;
   TabController _tabController;
   Trip _trip = Trip();
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
@@ -97,16 +100,15 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                             physics: NeverScrollableScrollPhysics(),
                             controller:_tabController,
                             children: [
-                              AddTicketBase(
-                                trip: _trip, 
+                              AddTrip(
                                 user: widget.user,
                                 listener: this,
                                 // search: (){
                                 //   // _profilePage = Profile
                                 // },
                               ),
-                              BookedTrip(trip: _trip,listener: this,),
-                              BookedHistory(trip: _trip,listener: this,),
+                              OnGoing(listener: this, user: widget.user),
+                              TripHistory(listener: this, user: widget.user)
                             ],
                           )
                         ),
@@ -124,14 +126,14 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                                 
                                 if(mounted){
                                   setState(() {
-                                    _profilePage = CusProfilePages.Add;
+                                    _profilePage = BusOwnerPages.AddTrip;
                                   });
                                 } 
                               } else if (val == 1) {
                                 _tabController.animateTo(1);
                                 if(mounted){
                                   setState(() {
-                                    _profilePage = CusProfilePages.BookedTrip;
+                                    _profilePage = BusOwnerPages.OnGoing;
                                   });
                                 } 
                               }
@@ -139,7 +141,7 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                                 _tabController.animateTo(2);
                                 if(mounted){
                                   setState(() {
-                                    _profilePage = CusProfilePages.BookedHistory;
+                                    _profilePage = BusOwnerPages.PastTrip;
                                   });
                                 } 
                               }
@@ -384,12 +386,12 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
   }
 
   @override
-  moveToPage(CusProfilePages page) {
-    if(CusProfilePages.SelectLocation == page){
+  moveToPage(BusOwnerPages page) {
+    if(BusOwnerPages.AddTrip == page){
       _tabController.animateTo(0);
-    }else if(CusProfilePages.BookedTrip == page){
+    }else if(BusOwnerPages.OnGoing == page){
       _tabController.animateTo(1);
-    }else if(CusProfilePages.BookedHistory == page){
+    }else if(BusOwnerPages.PastTrip == page){
       _tabController.animateTo(2);
     }
   }
@@ -401,19 +403,13 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
 
 }
 
-abstract class ProfileBaseListener{
-  moveToPage(CusProfilePages page);
+abstract class BusOwnerProfileBaseListener{
+  moveToPage(BusOwnerPages page);
   openDrawer();
 }
 
-enum CusProfilePages{
-  Add,
-  SelectLocation,
-  SelectBus,
-  SelectSeat,
-  PayForSeat,
-  BookedTrip,
-  BookedSeat,
-  LiveLocation,
-  BookedHistory,
+enum BusOwnerPages{
+  AddTrip,
+  OnGoing,
+  PastTrip,
 }

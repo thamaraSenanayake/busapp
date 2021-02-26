@@ -46,5 +46,13 @@ class Database{
       "userType":TypeConvert().userTypeToString( user.userType),
     });
   }
+
+  Future updateUser(User user) async{
+    await users.document(user.email).updateData({
+      "name":user.name,
+      "idNum":user.idNum,
+      "phone":user.phone,
+    });
+  }
   
 }

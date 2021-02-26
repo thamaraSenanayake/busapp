@@ -5,7 +5,8 @@ enum LoginPageList{
   CusLogin,
   CusSignin,
   AdminLogin,
-  BusLogin
+  BusLogin,
+  BusAddDetails
 }
 
 class AppData{

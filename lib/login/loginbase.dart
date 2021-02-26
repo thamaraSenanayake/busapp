@@ -5,6 +5,9 @@ import 'package:quickbussl/login/BusLogin.dart';
 import 'package:quickbussl/login/CusLogin.dart';
 import 'package:quickbussl/login/CusSignin.dart';
 import 'package:quickbussl/login/splashscreen.dart';
+import 'package:quickbussl/model/user.dart';
+
+import 'busAddDetails.dart';
 
 class LoginBase extends StatefulWidget {
   LoginBase({Key key}) : super(key: key);
@@ -17,6 +20,7 @@ class _LoginBaseState extends State<LoginBase> {
   LoginPageList _currentPage = LoginPageList.SplashScreen;
   double _width =0.0;
   double _height =0.0;
+  User _user;
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -61,8 +65,25 @@ class _LoginBaseState extends State<LoginBase> {
                 _currentPage == LoginPageList.AdminLogin?
                 AdminLogin():
 
-                
-                BusLogin()
+                _currentPage == LoginPageList.BusLogin?
+                BusLogin(
+                  goToPage: (val,user) {
+                    if(user!= null){
+                      _user = user;
+                    }
+                    setState(() {
+                      _currentPage = val;
+                    });
+                  },
+                ):
+                _currentPage == LoginPageList.BusAddDetails?
+                BusDetailsAdd(
+                  goToPage: (val) {
+                    setState(() {
+                      _currentPage = val;
+                    });
+                  },
+                ):Container()
               ),
 
             ]

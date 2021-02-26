@@ -12,6 +12,7 @@ class Trip{
   BusType busType;
   List<Seat> seatCount;
   List<String> userList;
+  String busName;
 }
 
 enum BusType{
