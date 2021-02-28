@@ -83,6 +83,7 @@ class _LoginBaseState extends State<LoginBase> {
                       _currentPage = val;
                     });
                   },
+                  user: _user,
                 ):Container()
               ),
 

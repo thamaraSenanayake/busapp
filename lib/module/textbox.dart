@@ -76,10 +76,10 @@ class _TextBoxState extends State<TextBox> {
         
         color: AppData.whiteColor,
         border: Border.all(
-          color: widget.errorText.length ==0 ? !widget.shadowDisplay?AppData.whiteColor:AppData.whiteColor:Colors.redAccent,
-          width: 3
+          color: widget.errorText.length ==0 ||  !widget.shadowDisplay?AppData.primaryColor2:AppData.whiteColor,
+          width: 1
         ),
-        // borderRadius: BorderRadius.circular(3),
+        borderRadius: BorderRadius.circular(3),
         boxShadow: [
           BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.25)),
           widget.shadowDisplay? BoxShadow(

@@ -95,6 +95,43 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        Container(
+                          height: 40,
+                          width: _width,
+                          // decoration: BoxDecoration(
+                          //   color: AppData.primaryColor,
+                          // ),
+                          child: Stack(
+                            children: [
+                              GestureDetector(
+                                onTap: (){
+                                  openDrawer();
+                                },
+                                child: Container(
+                                  height: 70,
+                                  width: 70,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.menu,
+                                      color:AppData.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Text(
+                                  _title,
+                                  style: TextStyle(
+                                    color: AppData.primaryColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w700
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                         Expanded(
                           child:TabBarView(
                             physics: NeverScrollableScrollPhysics(),

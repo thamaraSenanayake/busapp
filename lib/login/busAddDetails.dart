@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
-import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
-import 'package:quickbussl/login/CusLogin.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/textbox.dart';
 import '../const.dart';
 
 class BusDetailsAdd extends StatefulWidget {
+  final User user;
   final Function(LoginPageList) goToPage;
-  BusDetailsAdd({Key key, this.goToPage}) : super(key: key);
+  BusDetailsAdd({Key key,@required this.goToPage,@required this.user}) : super(key: key);
 
   @override
   _BusDetailsAddState createState() => _BusDetailsAddState();
@@ -58,6 +57,8 @@ class _BusDetailsAddState extends State<BusDetailsAdd> {
       setState(() {
         _loading = true;
       });
+      _user.email = widget.user.email;
+      _user.password = widget.user.password;
       Database().updateUser(_user);
       final storage = new FlutterSecureStorage();
       storage.write(key: KeyContainer.USERNAME,value: _user.email);
@@ -97,7 +98,7 @@ class _BusDetailsAddState extends State<BusDetailsAdd> {
                 color:  AppData.blackColor,
                 image: new DecorationImage(
                   fit: BoxFit.fill,
-                                    alignment:Alignment.topCenter,
+                  alignment:Alignment.topCenter,
                   colorFilter: new ColorFilter.mode(AppData.whiteColor.withOpacity(0.7), BlendMode.softLight),
                   image: new AssetImage(
                     "assets/background.jpg",
@@ -140,6 +141,7 @@ class _BusDetailsAddState extends State<BusDetailsAdd> {
                           ),
                           TextBox(
                             textBoxKey: null, 
+                            initText: widget.user.email,
                             enable: false,
                             onChange: (val){
                               
@@ -155,7 +157,7 @@ class _BusDetailsAddState extends State<BusDetailsAdd> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    "Name: ",
+                                    "Bus Name: ",
                                     style: TextStyle(
                                       color: AppData.primaryColor,
                                       fontSize: 18,
