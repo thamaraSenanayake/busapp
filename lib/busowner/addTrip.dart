@@ -1,5 +1,9 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
+import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
@@ -19,6 +23,8 @@ class AddTrip extends StatefulWidget {
 }
 
 class _AddTripState extends State<AddTrip> {
+  var chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
   double _width = 0.0;
   Trip _trip = Trip();
 
@@ -27,6 +33,57 @@ class _AddTripState extends State<AddTrip> {
   String _travelDateError = '';
   String _startLocationError = '';
   String _endLocationError = '';
+  TextEditingController _timeEstimate = TextEditingController();
+
+  
+
+  _done() async {
+    bool _validation = true;
+    if(_trip.startLocation.isEmpty){
+      setState(() {
+        _startLocationError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_trip.endLocation.isEmpty){
+      setState(() {
+        _endLocationError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_validation){
+      Random rnd = new Random(new DateTime.now().millisecondsSinceEpoch);
+
+      _trip.id = new DateTime.now().millisecondsSinceEpoch.toString();
+
+      for (var i = 0; i < 10; i++) {
+        _trip.id += chars[rnd.nextInt(chars.length)];
+      }
+
+      await Database().addTrip(_trip);
+      widget.listener.moveToPage(BusOwnerPages.OnGoing);
+
+    }
+  }
+
+  _setEndTime(){
+    
+  }
+
+  @override
+  void initState() { 
+    super.initState();
+    _trip.startLocation = "";
+    _trip.endLocation = "";
+    _trip.startPosition = LatLng(6.9218374, 79.8211859);
+    _trip.endPosition =  LatLng(6.9887912,81.0415076);
+    _trip.highWayBus = false;
+    _trip.busOwnerEmail = widget.user.email;
+    _trip.startTime = DateTime.now();
+    _trip.endTime =DateTime.now().add(Duration(hours: 5));
+    _trip.travelDate = DateTime.now();
+    _trip.busName = widget.user.name;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -182,11 +239,12 @@ class _AddTripState extends State<AddTrip> {
               initTime: TimeOfDay.now(), 
               onChange: (val){
                 _trip.startTime =DateTime(_trip.travelDate.year,_trip.travelDate.month,_trip.travelDate.day, val.hour, val.minute);
+                _setEndTime();
               }, 
               title: "Time"
             ),
             Padding(
-              padding: const EdgeInsets.only(top:10.0,bottom: 5),
+              padding: const EdgeInsets.only(top:10.0,bottom: 0),
               child: Container(
                 width: _width - 40,
                 child: Row(
@@ -217,11 +275,34 @@ class _AddTripState extends State<AddTrip> {
             TextBox(
               shadowDisplay: false,
               textBoxKey: null, 
+              textEditingController: _timeEstimate,
               onChange: (val){
 
               }, 
               errorText: "",
               enable: false,
+            ),
+
+            CheckboxListTile(
+              title: Padding(
+                padding: const EdgeInsets.only(left:5.0),
+                child: Text(
+                  "Highway bus : ",
+                  style: TextStyle(
+                    color: AppData.primaryColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                    backgroundColor: Colors.white
+                  ),
+                ),
+              ),
+              value: _trip.highWayBus, 
+              activeColor:AppData.primaryColor,
+              onChanged: (val){
+                setState(() {
+                  _trip.highWayBus = val;
+                });
+              }
             ),
 
             SizedBox(height:50),
@@ -230,7 +311,7 @@ class _AddTripState extends State<AddTrip> {
               text: "Done", 
               shadow: false,
               buttonClick: (){
-
+                _done();
               }
             )
 

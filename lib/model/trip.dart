@@ -8,11 +8,15 @@ class Trip{
   DateTime travelDate;
   String startLocation;
   String endLocation;
+  LatLng startPosition;
+  LatLng endPosition;
   LatLng currentLocation;
   BusType busType;
-  List<Seat> seatCount;
+  List<Seat> seatList;
   List<String> userList;
   String busName;
+  bool highWayBus;
+  String id;
 }
 
 enum BusType{

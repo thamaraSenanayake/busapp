@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/res/typeConvert.dart';
 
@@ -55,4 +56,35 @@ class Database{
     });
   }
   
+  Future addTrip(Trip trip) async{
+    List<Map<String,dynamic>> seatList =[];
+    for (var i = 0; i < 28; i++) {
+      seatList.add(
+        {
+          "email":"",
+          "number":(i+1),
+          "status":0,
+          "getInLocation":"",
+          "getOutLocation":"",
+          "getInPlace":"",
+          "getOutPlace":"",
+        }
+      );
+    }
+    await users.document(trip.id).setData({
+      "busOwnerEmail":trip.busOwnerEmail,
+      "startTime":trip.startTime,
+      "endTime":trip.endTime,
+      "travelDate":trip.travelDate,
+      "startLocation":trip.startLocation,
+      "endLocation":trip.endLocation,
+      "currentLocation":trip.currentLocation,
+      "busType":"BusType.Small",
+      "seatList":seatList,
+      "userList":trip.userList,
+      "busName":trip.busName,
+      "highWayBus":trip.highWayBus,
+      "id":trip.id,
+    });
+  }
 }

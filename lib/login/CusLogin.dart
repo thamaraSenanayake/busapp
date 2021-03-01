@@ -48,7 +48,7 @@ class _CusLoginState extends State<CusLogin> {
         _loginError = "";
       });
       User user = await Database().login(_email, _password);
-      if(user.name.isEmpty && user != null && user.userType == UserType.Passenger){
+      if(user != null && user.userType == UserType.Passenger){
         final storage = new FlutterSecureStorage();
         storage.write(key: KeyContainer.USERNAME,value: _email);
         storage.write(key: KeyContainer.PASSWORD,value: _password);
