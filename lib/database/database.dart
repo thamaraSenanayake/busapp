@@ -5,6 +5,7 @@ import 'package:quickbussl/res/typeConvert.dart';
 
 class Database{
   final CollectionReference users = Firestore.instance.collection('user');
+  final CollectionReference trips = Firestore.instance.collection('trip');
 
   Future<User> login(String email, String password ) async{
     QuerySnapshot querySnapshot;
@@ -71,7 +72,7 @@ class Database{
         }
       );
     }
-    await users.document(trip.id).setData({
+    await trips.document(trip.id).setData({
       "busOwnerEmail":trip.busOwnerEmail,
       "startTime":trip.startTime,
       "endTime":trip.endTime,

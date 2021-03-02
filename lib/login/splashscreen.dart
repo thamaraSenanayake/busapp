@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:quickbussl/busowner/profileBase.dart';
 import 'package:quickbussl/const.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
@@ -34,6 +35,15 @@ class _SplashScreenState extends State<SplashScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => CusProfile(
+                user: user,
+              )
+            )
+          );
+        }else{
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BusOwnerProfile(
                 user: user,
               )
             )

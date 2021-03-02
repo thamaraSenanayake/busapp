@@ -16,6 +16,8 @@ class AppData{
   static Color whiteColor= Color(0xFFFFFBFB);
   static Color blackColor= Color(0xff393939);
   static Color greenColor = Color(0xff70b545);
+  static int avgSpeedHightWay = 80;
+  static int avgSpeedNormalRoad = 50; 
 }
 
 class KeyContainer {

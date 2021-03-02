@@ -1,8 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
+import 'package:quickbussl/database/apiCall.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
@@ -66,7 +69,21 @@ class _AddTripState extends State<AddTrip> {
     }
   }
 
-  _setEndTime(){
+  _setEndTime() async {
+    if(_trip.startPosition != null && _trip.endPosition != null && _trip.startTime != null ){
+      await getDistance(_trip.startPosition,_trip.endPosition );  
+      double distanceInMeters = Geolocator.distanceBetween(_trip.startPosition.latitude, _trip.startPosition.longitude, _trip.endPosition.latitude, _trip.endPosition.longitude);
+      distanceInMeters =distanceInMeters/1000;
+
+      if(_trip.highWayBus){
+        _trip.endTime = _trip.startTime.add(Duration(hours: (distanceInMeters~/AppData.avgSpeedHightWay).toInt() ));
+        print(distanceInMeters~/AppData.avgSpeedHightWay);
+      }else{
+        _trip.endTime = _trip.startTime.add(Duration(hours: (distanceInMeters~/AppData.avgSpeedNormalRoad).toInt() ));
+        print(distanceInMeters~/AppData.avgSpeedNormalRoad);
+      }
+      _timeEstimate.text = DateFormat.jms().format(_trip.endTime);
+    }
     
   }
 
@@ -129,7 +146,11 @@ class _AddTripState extends State<AddTrip> {
               textBoxKey: null, 
               shadowDisplay: false,
               onChange: (val){
-
+                _trip.startLocation = val;
+                setState(() {
+                  _startLocationError  = "";
+                });
+                _setEndTime();
               }, 
               errorText: ""
             ),
@@ -166,7 +187,11 @@ class _AddTripState extends State<AddTrip> {
               shadowDisplay: false,
               textBoxKey: null, 
               onChange: (val){
-
+                _trip.endLocation = val;
+                setState(() {
+                  _endLocationError  = "";
+                });
+                _setEndTime();
               }, 
               errorText: ""
             ),
@@ -302,6 +327,7 @@ class _AddTripState extends State<AddTrip> {
                 setState(() {
                   _trip.highWayBus = val;
                 });
+                _setEndTime();
               }
             ),
 

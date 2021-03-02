@@ -36,6 +36,7 @@ dependencies:
   geolocator: ^6.0.0+4
   flutter_keyboard_visibility: ^3.2.1
   flutter_secure_storage: ^3.3.5
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:
