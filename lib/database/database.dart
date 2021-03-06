@@ -1,4 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:intl/intl.dart';
+import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/res/typeConvert.dart';
@@ -49,6 +52,8 @@ class Database{
     });
   }
 
+  
+
   Future updateUser(User user) async{
     await users.document(user.email).updateData({
       "name":user.name,
@@ -56,6 +61,35 @@ class Database{
       "phone":user.phone,
     });
   }
+
+  Future changePassword(User user) async{
+    await users.document(user.email).updateData({
+      "password":user.password,
+    });
+  }
+
+  Future bookSeat(List<Seat> seatList,List<String> userList,String tripId) async {
+    List<Map<String,dynamic>> seats =[];
+    for (var item in seatList) {
+      seats.add(
+        {
+          "email":item.email,
+          "number":item.number,
+          "status":item.status,
+          "getInLocation":TypeConvert().latLngToString(item.getInLocation),
+          "getOutLocation":TypeConvert().latLngToString(item.getOutLocation),
+          "getInPlace":item.getInPlace,
+          "getOutPlace":item.getOutPlace,
+        }
+      );
+    }
+
+    await trips.document(tripId).updateData({
+      'seatList':seats,
+      'userList':userList
+    });
+  }
+
   
   Future addTrip(Trip trip) async{
     List<Map<String,dynamic>> seatList =[];
@@ -86,6 +120,136 @@ class Database{
       "busName":trip.busName,
       "highWayBus":trip.highWayBus,
       "id":trip.id,
+      "startPosition":TypeConvert().latLngToString(trip.startPosition),
+      "endPosition":TypeConvert().latLngToString(trip.endPosition),
     });
+  }
+
+  Future<List<Trip>> searchTrip(String startLocation,String endLocation,DateTime date) async {
+    QuerySnapshot querySnapshot;
+    final timestamp = Timestamp.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
+    final timestampNextDate = Timestamp.fromMillisecondsSinceEpoch(date.add(Duration(days: 1)).millisecondsSinceEpoch);
+    querySnapshot = await trips
+    .where('startLocation',isEqualTo: startLocation)
+    .where('endLocation',isEqualTo: endLocation)
+    .where('travelDate',isGreaterThanOrEqualTo:timestamp)
+    .where('travelDate',isLessThan:timestampNextDate)
+    .getDocuments();
+
+    return _setTrip(querySnapshot);
+  }
+
+  Future<List<String>> getLocationList() async {
+    QuerySnapshot querySnapshot;
+    DateTime date = DateTime.now();
+    List<String> _locationList = [];
+    final startAtTimestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
+
+    querySnapshot = await trips
+    .where('travelDate',isGreaterThanOrEqualTo:startAtTimestamp)
+    .getDocuments();
+
+    for (var item in querySnapshot.documents) {
+      _locationList.add(item['startLocation']);
+      _locationList.add(item['endLocation']);
+    }
+
+    return _locationList;
+  }
+
+  Future<List<Trip>> bookedTripCustomer(String userEmail) async {
+    QuerySnapshot querySnapshot;
+    DateTime date = DateTime.now();
+    querySnapshot = await trips
+    .where('userList',arrayContains: userEmail)
+    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .getDocuments();
+
+    return _setTrip(querySnapshot);
+  }
+
+  Future<List<Trip>> tripHistoryCustomer(String userEmail) async {
+    QuerySnapshot querySnapshot;
+    DateTime date = DateTime.now();
+    querySnapshot = await trips
+    .where('userList',arrayContains: userEmail)
+    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .getDocuments();
+
+    return _setTrip(querySnapshot);
+  }
+  Future<List<Trip>> onGoingTripBusOwner(String userEmail) async {
+    QuerySnapshot querySnapshot;
+    DateTime date = DateTime.now();
+    querySnapshot = await trips
+    .where('busOwnerEmail',arrayContains: userEmail)
+    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .getDocuments();
+
+    return _setTrip(querySnapshot);
+  }
+
+  Future<List<Trip>> pastTripBusOwner(String userEmail) async {
+    QuerySnapshot querySnapshot;
+    DateTime date = DateTime.now();
+    querySnapshot = await trips
+    .where('busOwnerEmail',arrayContains: userEmail)
+    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .getDocuments();
+
+    return _setTrip(querySnapshot);
+  }
+
+  Future setLiveLocation(LatLng position,String tripId) async {
+    await trips.document(tripId).updateData({
+      'currentLocation':TypeConvert().latLngToString(position),
+    });
+  }
+
+  
+
+  List<Trip> _setTrip(QuerySnapshot querySnapshot) {
+    List<Trip> tripList =[];
+
+    for (var item in querySnapshot.documents) {
+      List<Seat> seatList =[];
+      Timestamp startTime = item['startTime'];
+      Timestamp travelDate = item['travelDate'];
+      
+      for (var seat in item['seatList']) {
+
+        seatList.add(
+          Seat()..email = seat["email"]
+            ..number = seat["number"]
+            ..status = seat["status"]
+            ..getInLocation = seat["getInLocation"]
+            ..getOutLocation = seat["getOutLocation"]
+            ..getInPlace = seat["getInPlace"]
+            ..getOutPlace = seat["getOutPlace"]
+        );
+        tripList.add(
+          Trip()
+          ..busOwnerEmail = item['busOwnerEmail']
+          ..startTime = DateTime.fromMillisecondsSinceEpoch(startTime.millisecondsSinceEpoch) 
+          ..endTime = item['endTime']
+          ..travelDate = DateTime.fromMillisecondsSinceEpoch(travelDate.millisecondsSinceEpoch) 
+          ..startLocation = item['startLocation']
+          ..endLocation = item['endLocation']
+          ..startPosition =TypeConvert().stringToLatLng(item["startPosition"]) 
+          ..endPosition = TypeConvert().stringToLatLng(item["endPosition"])  
+          ..currentLocation = item['currentLocation']
+          ..busType =TypeConvert().stringToBusType(item['busType'])
+          ..seatList = seatList
+          ..userList = item['userList'].cast<String>()
+          ..busName = item['busName']
+          ..highWayBus = item['highWayBus']
+          ..id = item['id']
+        );
+
+      }
+    }
+
+    return tripList;
+    
   }
 }

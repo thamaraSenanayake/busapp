@@ -1,3 +1,4 @@
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 
@@ -47,5 +48,13 @@ class TypeConvert{
     else{
       return "BusType.Large";
     }
+  }
+
+  String latLngToString(LatLng val){
+    return val.latitude.toString()+","+val.longitude.toString();
+  }
+
+  LatLng stringToLatLng(String val){
+    return LatLng(double.parse(val.toString().split(",")[0]),double.parse(val.toString().split(",")[1]));
   }
 }

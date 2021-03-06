@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
-import 'package:quickbussl/cusProfile/profileBase.dart';
-import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 
 class OnGoing extends StatefulWidget {
