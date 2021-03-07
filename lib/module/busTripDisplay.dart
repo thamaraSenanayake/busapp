@@ -255,7 +255,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: widget.busTrip.startLocation,
+                                  text: widget.busTrip.endLocation,
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,

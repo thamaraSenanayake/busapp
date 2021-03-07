@@ -93,7 +93,7 @@ class Database{
   
   Future addTrip(Trip trip) async{
     List<Map<String,dynamic>> seatList =[];
-    for (var i = 0; i < 28; i++) {
+    for (var i = 0; i < 29; i++) {
       seatList.add(
         {
           "email":"",

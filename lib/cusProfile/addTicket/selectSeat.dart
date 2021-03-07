@@ -18,7 +18,7 @@ class _SelectSeatState extends State<SelectSeat> {
   double _seatHeight = 10.0;
   double _rowHeight = 14.0;
   double _height = 0;
-  List<Seat> seatCount = [];
+  List<Seat> seatCount;
   Widget _seats;
 
   _smallBus(){
@@ -59,8 +59,10 @@ class _SelectSeatState extends State<SelectSeat> {
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: (){
-                    seatCount[index[0]].status = 4;
-                    _smallBus();
+                    if(seatCount[index[0]].status == 0){
+                      seatCount[index[0]].status = 4;
+                      _smallBus();
+                    }
                   },
                   child: Container(
                     height: _seatHeight,
@@ -71,7 +73,7 @@ class _SelectSeatState extends State<SelectSeat> {
                        Padding(
                          padding: const EdgeInsets.all(3.0),
                          child: Text(
-                           index[0].toString(),
+                           (index[0]+1).toString(),
                       style: TextStyle(color: AppData.whiteColor,fontSize:15),
                          ),
                        ), 
@@ -119,7 +121,7 @@ class _SelectSeatState extends State<SelectSeat> {
                        Padding(
                         padding: const EdgeInsets.all(3.0),
                         child: Text(
-                          index[3].toString(),
+                          (index[3] + 1).toString(),
                           style: TextStyle(color: AppData.whiteColor,fontSize:15),
                         ),
                        ), 
@@ -157,7 +159,7 @@ class _SelectSeatState extends State<SelectSeat> {
                         Padding(
                           padding: const EdgeInsets.all(3.0),
                           child: Text(
-                            index[1].toString(),
+                            (index[1]+1).toString(),
                             style: TextStyle(color: AppData.whiteColor,fontSize:15),
                           ),
                         ), 
@@ -201,7 +203,7 @@ class _SelectSeatState extends State<SelectSeat> {
                        Padding(
                          padding: const EdgeInsets.all(3.0),
                          child: Text(
-                           index[2].toString(),
+                           (index[2]+1).toString(),
                       style: TextStyle(color: AppData.whiteColor,fontSize:15),
                          ),
                        ), 
@@ -240,19 +242,7 @@ class _SelectSeatState extends State<SelectSeat> {
   void initState() {
     super.initState();
     print(widget.trip);
-    for (var i = 0; i < 29; i++) {
-      if(i % 3 == 0){
-        seatCount.add(
-          Seat()
-          ..status = 1
-        );
-      }else{
-        seatCount.add(
-          Seat()
-          ..status = 0
-        );
-      }
-    }
+    seatCount = widget.trip.seatList;
     WidgetsBinding.instance.addPostFrameCallback((_) { 
       _smallBus();
     });

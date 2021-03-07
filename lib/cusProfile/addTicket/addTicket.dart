@@ -11,8 +11,8 @@ import '../../const.dart';
 
 
 class AddTicketBase extends StatefulWidget {
-  final Trip trip;
   final User user;
+  final Trip trip;
   final String selectedArrive;
   final String selectedDeparture;
   final DateTime selectedDate;
@@ -24,13 +24,19 @@ class AddTicketBase extends StatefulWidget {
 }
 
 class _AddTicketStateBase extends State<AddTicketBase> {
-  
+  Trip _trip;
+  String _selectedArrive;
+  String _selectedDeparture;
+  DateTime _selectedDate;
   String _title = "Enter Location";
   double _width=0.0;
   CusProfilePages _profilePage = CusProfilePages.SelectLocation;
 
   _initValues(){
-    
+    _trip = widget.trip;
+    _selectedArrive = widget.selectedArrive;
+    _selectedDeparture = widget.selectedDeparture;
+    _selectedDate = widget.selectedDate;
   }
 
   @override
@@ -87,6 +93,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
                       child: Icon(
                         Icons.menu,
                         color:AppData.primaryColor,
+                        size: 35,
                       ),
                     ),
                   ),
@@ -101,6 +108,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
                       child: Icon(
                         Icons.arrow_back,
                         color:AppData.primaryColor,
+                        size: 35,
                       ),
                     ),
                   ),
@@ -122,20 +130,21 @@ class _AddTicketStateBase extends State<AddTicketBase> {
           Container(
             child: _profilePage==CusProfilePages.SelectLocation?
             SelectLocation(
-              trip: widget.trip, 
+              trip: _trip, 
               nextPage: (selectedDeparture,selectedArrive,selectedDate){
                 setState(() {
                   _title = "Select Bus";
                   _profilePage=CusProfilePages.SelectBus;
                 });
               }, 
-              selectedArrive: widget.selectedArrive, 
-              selectedDate: widget.selectedDate, 
-              selectedDeparture: widget.selectedDeparture,
+              selectedArrive: _selectedArrive, 
+              selectedDate: _selectedDate, 
+              selectedDeparture: _selectedDeparture,
             ):_profilePage==CusProfilePages.SelectBus?
             SelectBus(
-              trip: widget.trip, 
+              trip: _trip, 
               nextPage: (Trip trip){
+                _trip=trip;
                 setState(() {
                   _title = "Select Seat";
                   _profilePage=CusProfilePages.SelectSeat;
@@ -143,7 +152,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
               }
             ):_profilePage==CusProfilePages.SelectSeat?
             SelectSeat(
-              trip: widget.trip, 
+              trip: _trip, 
               nextPage: (int seatNum){
                 setState(() {
                   _title = "Confirm Payment";
@@ -152,7 +161,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
               }
             ):_profilePage==CusProfilePages.PayForSeat?
             Summery(
-              trip: widget.trip, 
+              trip: _trip, 
               user: widget.user,
               nextPage: (){
                 widget.listener.moveToPage(CusProfilePages.BookedTrip);

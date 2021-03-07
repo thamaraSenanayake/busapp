@@ -18,6 +18,8 @@ class AppData{
   static Color greenColor = Color(0xff70b545);
   static int avgSpeedHightWay = 80;
   static int avgSpeedNormalRoad = 50; 
+  static final String kGoogleApiKey = "AIzaSyCHKdl_iQNomnmj7Lm8x3WYBbQPeqRBNLo";
+
 }
 
 class KeyContainer {

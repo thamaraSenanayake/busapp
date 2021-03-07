@@ -25,6 +25,7 @@ class _CustomTimePicker extends State<CustomTimePicker> {
   if (picked != null)
     setState(() {
       _selectedTime = picked;
+      widget.onChange(_selectedTime);
     });}
 
   @override
