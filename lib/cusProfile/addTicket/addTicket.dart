@@ -17,7 +17,6 @@ class AddTicketBase extends StatefulWidget {
   final String selectedDeparture;
   final DateTime selectedDate;
   final ProfileBaseListener listener;
-  // final Function search;
   AddTicketBase({Key key,@required this.trip,@required this.user,@required this.listener,@required this.selectedArrive,@required this.selectedDeparture,@required this.selectedDate}) : super(key: key);
 
   @override
