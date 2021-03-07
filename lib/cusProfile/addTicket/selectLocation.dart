@@ -9,8 +9,11 @@ import 'package:quickbussl/module/customDropDown.dart';
 import '../../const.dart';
 class SelectLocation extends StatefulWidget {
   final Trip trip;
-  final Function nextPage;
-  SelectLocation({Key key, @required this.trip,@required this.nextPage}) : super(key: key);
+  final Function(String,String,DateTime) nextPage;
+  final String selectedDeparture;
+  final String selectedArrive;
+  final DateTime selectedDate;
+  SelectLocation({Key key, @required this.trip,@required this.nextPage,@required this.selectedDeparture,@required this.selectedArrive,@required this.selectedDate}) : super(key: key);
 
   @override
   _SelectLocationState createState() => _SelectLocationState();
@@ -32,12 +35,13 @@ class _SelectLocationState extends State<SelectLocation> {
 
   _search(){
     // _tripList = await Database().searchTrip(startLocation, endLocation, date)
-    widget.nextPage();
+    widget.nextPage(_selectedDeparture,_selectedArrive,_selectedDate);
   }
 
   _initValue() async {
-   _departure = _arrive = await Database().getLocationList();
+    _departure = _arrive = await Database().getLocationList();
 
+    if(_departure.length != 0){
     if(widget.trip.startLocation != null){
       _selectedDeparture = widget.trip.startLocation;
     }else{
@@ -48,7 +52,7 @@ class _SelectLocationState extends State<SelectLocation> {
       _selectedArrive = widget.trip.endLocation;
     }else{
       _selectedArrive = _departure[0];
-    }
+    }}
 
     if(widget.trip.travelDate != null){
       _selectedDate = widget.trip.travelDate;
@@ -74,13 +78,13 @@ class _SelectLocationState extends State<SelectLocation> {
       _width = MediaQuery.of(context).size.width;
     });
     return _loading? Expanded(
-      child: Container(
-        color: Color.fromRGBO(128, 128, 128, 0.3),
-        child: SpinKitDoubleBounce(
-          color: AppData.primaryColor2,
-          size: 50.0,
+        child: Container(
+          color: Color.fromRGBO(128, 128, 128, 0.3),
+          child: SpinKitDoubleBounce(
+            color: AppData.primaryColor2,
+            size: 50.0,
+          ),
         ),
-      ),
       ):
       Column(
       children: [
@@ -119,7 +123,7 @@ class _SelectLocationState extends State<SelectLocation> {
               print(val);
               widget.trip.startLocation = val;
             }, 
-            selectedText: _departure[0]
+            selectedText: _selectedDeparture
           ),
           SizedBox(
             height: 10,
@@ -159,7 +163,7 @@ class _SelectLocationState extends State<SelectLocation> {
               print(val);
               widget.trip.endLocation = val;
             }, 
-            selectedText: _arrive[0]
+            selectedText: _selectedArrive
           ),
           SizedBox(
             height: 10,

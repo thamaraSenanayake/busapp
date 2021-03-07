@@ -116,7 +116,7 @@ class Database{
       "currentLocation":trip.currentLocation,
       "busType":"BusType.Small",
       "seatList":seatList,
-      "userList":trip.userList,
+      "userList":[],
       "busName":trip.busName,
       "highWayBus":trip.highWayBus,
       "id":trip.id,
@@ -141,7 +141,6 @@ class Database{
 
   Future<List<String>> getLocationList() async {
     QuerySnapshot querySnapshot;
-    DateTime date = DateTime.now();
     List<String> _locationList = [];
     final startAtTimestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
 
@@ -159,10 +158,10 @@ class Database{
 
   Future<List<Trip>> bookedTripCustomer(String userEmail) async {
     QuerySnapshot querySnapshot;
-    DateTime date = DateTime.now();
+    final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('userList',arrayContains: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .where('travelDate',isGreaterThanOrEqualTo:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -170,20 +169,20 @@ class Database{
 
   Future<List<Trip>> tripHistoryCustomer(String userEmail) async {
     QuerySnapshot querySnapshot;
-    DateTime date = DateTime.now();
+    final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('userList',arrayContains: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .where('travelDate',isLessThan:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
   }
   Future<List<Trip>> onGoingTripBusOwner(String userEmail) async {
     QuerySnapshot querySnapshot;
-    DateTime date = DateTime.now();
+    final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('busOwnerEmail',arrayContains: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .where('travelDate',isGreaterThanOrEqualTo:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -191,10 +190,10 @@ class Database{
 
   Future<List<Trip>> pastTripBusOwner(String userEmail) async {
     QuerySnapshot querySnapshot;
-    DateTime date = DateTime.now();
+    final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('busOwnerEmail',arrayContains: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:date.year.toString()+"-"+date.month.toString()+"-"+date.day.toString())
+    .where('travelDate',isLessThan:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -215,6 +214,7 @@ class Database{
       List<Seat> seatList =[];
       Timestamp startTime = item['startTime'];
       Timestamp travelDate = item['travelDate'];
+      Timestamp endTime = item['endTime'];
       
       for (var seat in item['seatList']) {
 
@@ -222,31 +222,31 @@ class Database{
           Seat()..email = seat["email"]
             ..number = seat["number"]
             ..status = seat["status"]
-            ..getInLocation = seat["getInLocation"]
-            ..getOutLocation = seat["getOutLocation"]
+            ..getInLocation = seat["getInLocation"].toString().isNotEmpty? TypeConvert().stringToLatLng(seat["getInLocation"]):null
+            ..getOutLocation = seat["getOutLocation"].toString().isNotEmpty? TypeConvert().stringToLatLng(seat["getOutLocation"]):null
             ..getInPlace = seat["getInPlace"]
             ..getOutPlace = seat["getOutPlace"]
         );
-        tripList.add(
-          Trip()
-          ..busOwnerEmail = item['busOwnerEmail']
-          ..startTime = DateTime.fromMillisecondsSinceEpoch(startTime.millisecondsSinceEpoch) 
-          ..endTime = item['endTime']
-          ..travelDate = DateTime.fromMillisecondsSinceEpoch(travelDate.millisecondsSinceEpoch) 
-          ..startLocation = item['startLocation']
-          ..endLocation = item['endLocation']
-          ..startPosition =TypeConvert().stringToLatLng(item["startPosition"]) 
-          ..endPosition = TypeConvert().stringToLatLng(item["endPosition"])  
-          ..currentLocation = item['currentLocation']
-          ..busType =TypeConvert().stringToBusType(item['busType'])
-          ..seatList = seatList
-          ..userList = item['userList'].cast<String>()
-          ..busName = item['busName']
-          ..highWayBus = item['highWayBus']
-          ..id = item['id']
-        );
 
       }
+      tripList.add(
+        Trip()
+        ..busOwnerEmail = item['busOwnerEmail']
+        ..startTime = DateTime.fromMillisecondsSinceEpoch(startTime.millisecondsSinceEpoch) 
+        ..endTime =  DateTime.fromMillisecondsSinceEpoch(endTime.millisecondsSinceEpoch)
+        ..travelDate = DateTime.fromMillisecondsSinceEpoch(travelDate.millisecondsSinceEpoch) 
+        ..startLocation = item['startLocation']
+        ..endLocation = item['endLocation']
+        ..startPosition =TypeConvert().stringToLatLng(item["startPosition"]) 
+        ..endPosition = TypeConvert().stringToLatLng(item["endPosition"])  
+        ..currentLocation = item['currentLocation']
+        ..busType =TypeConvert().stringToBusType(item['busType'])
+        ..seatList = seatList
+        ..userList = item['userList'].cast<String>()
+        ..busName = item['busName']
+        ..highWayBus = item['highWayBus']
+        ..id = item['id']
+      );
     }
 
     return tripList;

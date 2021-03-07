@@ -239,6 +239,7 @@ class _SelectSeatState extends State<SelectSeat> {
   @override
   void initState() {
     super.initState();
+    print(widget.trip);
     for (var i = 0; i < 29; i++) {
       if(i % 3 == 0){
         seatCount.add(

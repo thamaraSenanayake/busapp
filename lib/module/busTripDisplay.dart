@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quickbussl/model/trip.dart';
 
 import '../const.dart';
@@ -14,6 +15,21 @@ class BusTripDisplay extends StatefulWidget {
 
 class _BusTripDisplayState extends State<BusTripDisplay> {
   double _width = 0.0;
+  int _availableSeat = 0;
+
+  @override
+  void initState() { 
+    super.initState();
+    _setAvailableSeat();
+  }
+  
+  _setAvailableSeat(){
+    for (var item in widget.busTrip.seatList) {
+      if(item.status == 0){
+        _availableSeat++;
+      }
+    }
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -42,7 +58,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Super Travels",
+                  widget.busTrip.busName,
                   style: TextStyle(
                     color: AppData.primaryColor,
                     fontSize: 18,
@@ -80,7 +96,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                 text:TextSpan(
                                   children: <TextSpan>[
                                     TextSpan(
-                                      text: "At",
+                                      text: "At ",
                                       style: TextStyle(
                                         color: AppData.blackColor,
                                         fontSize: 16,
@@ -88,7 +104,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                       ),
                                     ),
                                     TextSpan(
-                                      text: ' 10:00 AM',
+                                      text: DateFormat.jm().format(widget.busTrip.startTime),
                                       style: TextStyle(
                                         color: AppData.blackColor,
                                         fontSize: 16,
@@ -105,15 +121,15 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                           text:TextSpan(
                             children: <TextSpan>[
                               TextSpan(
-                                text: "8/",
+                                text: _availableSeat.toString()+"/",
                                 style: TextStyle(
                                   color: AppData.blackColor,
-                                  fontSize: 75,
+                                  fontSize: 60,
                                   fontWeight: FontWeight.w300
                                 ),
                               ),
                               TextSpan(
-                                text: '50 Seats left',
+                                text: '28 Seats left',
                                 style: TextStyle(
                                   color: AppData.blackColor,
                                   fontSize: 16,
@@ -147,7 +163,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                             text:TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "Start from",
+                                  text: "Start from ",
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -155,7 +171,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' Colombo',
+                                  text: widget.busTrip.startLocation,
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -169,6 +185,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                       ),
                     ),
                     Container(
+                      width: 125,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -183,7 +200,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                             text:TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "At",
+                                  text: "At ",
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -191,7 +208,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' 10.00 A.M',
+                                  text:  DateFormat.jm().format(widget.busTrip.startTime),
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -230,7 +247,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                             text:TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "Arrive to",
+                                  text: "Arrive to ",
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -238,7 +255,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' Badulla',
+                                  text: widget.busTrip.startLocation,
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -252,6 +269,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                       ),
                     ),
                     Container(
+                      width: 125,
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -266,7 +284,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                             text:TextSpan(
                               children: <TextSpan>[
                                 TextSpan(
-                                  text: "At",
+                                  text: "At ",
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,
@@ -274,7 +292,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                   ),
                                 ),
                                 TextSpan(
-                                  text: ' 10.00 A.M',
+                                  text:  DateFormat.jm().format(widget.busTrip.endTime),
                                   style: TextStyle(
                                     color: AppData.blackColor,
                                     fontSize: 16,

@@ -13,9 +13,12 @@ import '../../const.dart';
 class AddTicketBase extends StatefulWidget {
   final Trip trip;
   final User user;
+  final String selectedArrive;
+  final String selectedDeparture;
+  final DateTime selectedDate;
   final ProfileBaseListener listener;
   // final Function search;
-  AddTicketBase({Key key,@required this.trip,@required this.user,@required this.listener}) : super(key: key);
+  AddTicketBase({Key key,@required this.trip,@required this.user,@required this.listener,@required this.selectedArrive,@required this.selectedDeparture,@required this.selectedDate}) : super(key: key);
 
   @override
   _AddTicketStateBase createState() => _AddTicketStateBase();
@@ -121,12 +124,15 @@ class _AddTicketStateBase extends State<AddTicketBase> {
             child: _profilePage==CusProfilePages.SelectLocation?
             SelectLocation(
               trip: widget.trip, 
-              nextPage: (){
+              nextPage: (selectedDeparture,selectedArrive,selectedDate){
                 setState(() {
                   _title = "Select Bus";
                   _profilePage=CusProfilePages.SelectBus;
                 });
-              }
+              }, 
+              selectedArrive: widget.selectedArrive, 
+              selectedDate: widget.selectedDate, 
+              selectedDeparture: widget.selectedDeparture,
             ):_profilePage==CusProfilePages.SelectBus?
             SelectBus(
               trip: widget.trip, 

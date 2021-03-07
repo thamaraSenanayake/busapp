@@ -21,6 +21,9 @@ class CusProfile extends StatefulWidget {
 class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin implements ProfileBaseListener {
   double _height  =0.0;
   double _width =0.0;
+  String _selectedDeparture = '';
+  String _selectedArrive = '';
+  DateTime _selectedDate; 
   bool _bottomBarVisibility = true;
   String _title = "Enter Location";
   CusProfilePages _profilePage =CusProfilePages.Add;
@@ -100,10 +103,10 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                               AddTicketBase(
                                 trip: _trip, 
                                 user: widget.user,
-                                listener: this,
-                                // search: (){
-                                //   // _profilePage = Profile
-                                // },
+                                listener: this, 
+                                selectedArrive: _selectedArrive, 
+                                selectedDate: _selectedDate, 
+                                selectedDeparture: _selectedDeparture,
                               ),
                               BookedTrip(trip: _trip,listener: this,),
                               BookedHistory(trip: _trip,listener: this,),
