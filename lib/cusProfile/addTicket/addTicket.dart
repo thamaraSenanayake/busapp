@@ -135,6 +135,9 @@ class _AddTicketStateBase extends State<AddTicketBase> {
                 setState(() {
                   _title = "Select Bus";
                   _profilePage=CusProfilePages.SelectBus;
+                  _selectedArrive = selectedArrive;
+                  _selectedDate =selectedDate;
+                  _selectedDeparture = selectedDeparture;
                 });
               }, 
               selectedArrive: _selectedArrive, 
@@ -142,7 +145,9 @@ class _AddTicketStateBase extends State<AddTicketBase> {
               selectedDeparture: _selectedDeparture,
             ):_profilePage==CusProfilePages.SelectBus?
             SelectBus(
-              trip: _trip, 
+              selectedArrive: _selectedArrive, 
+              selectedDate: _selectedDate, 
+              selectedDeparture: _selectedDeparture,
               nextPage: (Trip trip){
                 _trip=trip;
                 setState(() {
@@ -158,7 +163,8 @@ class _AddTicketStateBase extends State<AddTicketBase> {
                   _title = "Confirm Payment";
                   _profilePage=CusProfilePages.PayForSeat;
                 });
-              }
+              }, 
+              user: widget.user,
             ):_profilePage==CusProfilePages.PayForSeat?
             Summery(
               trip: _trip, 

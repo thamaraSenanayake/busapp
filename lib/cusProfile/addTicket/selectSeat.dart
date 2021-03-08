@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:quickbussl/const.dart';
+import 'package:quickbussl/cusProfile/addTicket/addDetails.dart';
 import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/trip.dart';
+import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 
 class SelectSeat extends StatefulWidget {
   final Trip trip;
+  final User user;
   final Function(int) nextPage; 
-  SelectSeat({Key key,@required this.trip,@required this.nextPage}) : super(key: key);
+  SelectSeat({Key key,@required this.trip,@required this.nextPage,@required this.user}) : super(key: key);
 
   @override
   _SelectSeatState createState() => _SelectSeatState();
@@ -58,9 +61,18 @@ class _SelectSeatState extends State<SelectSeat> {
               one != null? Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
-                  onTap: (){
+                  onTap: () async {
                     if(seatCount[index[0]].status == 0){
                       seatCount[index[0]].status = 4;
+                      await Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, __) => AddDetails(
+                            seat:seatCount[index[0]],
+                            user: widget.user,
+                          ),
+                          opaque: false
+                        ),
+                      );
                       _smallBus();
                     }
                   },
@@ -108,9 +120,20 @@ class _SelectSeatState extends State<SelectSeat> {
               ):Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
-                  onTap: (){
-                    seatCount[index[3]].status = 4;
-                    _smallBus();
+                  onTap: () async {
+                    if(seatCount[index[3]].status == 0){
+                      seatCount[index[3]].status = 4;
+                      await Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, __) => AddDetails(
+                            seat:seatCount[index[3]],
+                            user: widget.user,
+                          ),
+                          opaque: false
+                        ),
+                      );
+                      _smallBus();
+                    }
                   },
                   child: Container(
                     height: _seatHeight,
@@ -146,9 +169,20 @@ class _SelectSeatState extends State<SelectSeat> {
               two != null? Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
-                  onTap: (){
-                    seatCount[index[1]].status = 4;
-                    _smallBus();
+                  onTap: () async {
+                    if(seatCount[index[1]].status == 0){
+                      seatCount[index[1]].status = 4;
+                      await Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, __) => AddDetails(
+                            seat:seatCount[index[1]],
+                            user: widget.user,
+                          ),
+                          opaque: false
+                        ),
+                      );
+                      _smallBus();
+                    }
                   },
                   child: Container(
                     height: _seatHeight,
@@ -190,9 +224,20 @@ class _SelectSeatState extends State<SelectSeat> {
              three != null? Padding(
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
-                  onTap: (){
-                    seatCount[index[2]].status = 4;
-                    _smallBus();
+                  onTap: () async {
+                    if(seatCount[index[2]].status == 0){
+                      seatCount[index[2]].status = 4;
+                      await Navigator.of(context).push(
+                        PageRouteBuilder(
+                          pageBuilder: (context, _, __) => AddDetails(
+                            seat:seatCount[index[2]],
+                            user: widget.user,
+                          ),
+                          opaque: false
+                        ),
+                      );
+                      _smallBus();
+                    }
                   },
                   child: Container(
                     height: _seatHeight,

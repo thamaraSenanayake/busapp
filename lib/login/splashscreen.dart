@@ -147,7 +147,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         
                       ],
                     ):Container(
-                      color: Color.fromRGBO(128, 128, 128, 0.3),
+                      // color: Color.fromRGBO(128, 128, 128, 0.3),
                       child: SpinKitDoubleBounce(
                         color: AppData.primaryColor,
                         size: 50.0,

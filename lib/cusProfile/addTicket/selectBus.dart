@@ -7,9 +7,11 @@ import 'package:quickbussl/module/busTripDisplay.dart';
 import '../../const.dart';
 
 class SelectBus extends StatefulWidget {
-  final Trip trip;
+  final String selectedDeparture;
+  final String selectedArrive;
+  final DateTime selectedDate;  
   final Function(Trip) nextPage;
-  SelectBus({Key key,@required this.trip,@required this.nextPage}) : super(key: key);
+  SelectBus({Key key,@required this.nextPage,@required this.selectedDeparture,@required this.selectedArrive,@required this.selectedDate}) : super(key: key);
 
   @override
   _SelectBusState createState() => _SelectBusState();
@@ -22,7 +24,7 @@ class _SelectBusState extends State<SelectBus> implements BusTripDisplayListener
   List<Widget> _tripWidgetList = [];
 
   _getBus() async {
-    _tripList = await Database().searchTrip(widget.trip.startLocation, widget.trip.endLocation, widget.trip.travelDate);
+    _tripList = await Database().searchTrip(widget.selectedDeparture, widget.selectedArrive, widget.selectedDate);
     for (var item in _tripList) {
       _tripWidgetList.add(
         BusTripDisplay(busTrip: item, listener: this)
