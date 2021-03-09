@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/user.dart';
@@ -23,6 +22,25 @@ class _AddDetailsState extends State<AddDetails> {
   String _getOutPlaceError = "";
   String _title = "Add Details";
   double _width=0.0;
+
+  _done(){
+    bool _validation = true;
+    if(_seat.getInPlace.isEmpty){
+      setState(() {
+        _getInPlaceError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_seat.getOutPlace.isEmpty){
+      setState(() {
+        _getOutPlaceError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_validation){
+      Navigator.pop(context,_seat);
+    }
+  }
 
   _initValues(){
    _seat = widget.seat;
@@ -52,7 +70,7 @@ class _AddDetailsState extends State<AddDetails> {
                   children: [
                     GestureDetector(
                       onTap: (){
-                        Navigator.pop(context);
+                        Navigator.pop(context,_seat);
                       },
                       child: Container(
                         height: 70,
@@ -117,7 +135,7 @@ class _AddDetailsState extends State<AddDetails> {
                   _seat.getInLocation = position;
                   _seat.getInPlace = place;
 
-                }
+                }, initLocation: _seat.getInPlace,
               ),
               Padding(
                 padding: const EdgeInsets.only(top:10.0,bottom: 5),
@@ -153,10 +171,10 @@ class _AddDetailsState extends State<AddDetails> {
                   setState(() {
                     _getOutPlaceError = "";
                   });
-                  _seat.getInLocation = position;
-                  _seat.getInPlace = place;
+                  _seat.getOutLocation = position;
+                  _seat.getOutPlace = place;
 
-                }
+                }, initLocation: _seat.getOutPlace,
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
@@ -176,7 +194,13 @@ class _AddDetailsState extends State<AddDetails> {
               SizedBox(
                 height: 10,
               ),
-              CustomButton(text: "Done", buttonClick: (){}, shadow: false,)
+              CustomButton(
+                text: "Done", 
+                buttonClick: (){
+                  _done();
+                }, 
+                shadow: false,
+              )
             ],
           ),
         ),

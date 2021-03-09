@@ -8,12 +8,12 @@ import 'package:quickbussl/module/customDropDown.dart';
 
 import '../../const.dart';
 class SelectLocation extends StatefulWidget {
-  final Trip trip;
+  //final Trip trip;
   final Function(String,String,DateTime) nextPage;
   final String selectedDeparture;
   final String selectedArrive;
   final DateTime selectedDate;
-  SelectLocation({Key key, @required this.trip,@required this.nextPage,@required this.selectedDeparture,@required this.selectedArrive,@required this.selectedDate}) : super(key: key);
+  SelectLocation({Key key,@required this.nextPage,@required this.selectedDeparture,@required this.selectedArrive,@required this.selectedDate}) : super(key: key);
 
   @override
   _SelectLocationState createState() => _SelectLocationState();
@@ -42,20 +42,20 @@ class _SelectLocationState extends State<SelectLocation> {
     _departure = _arrive = await Database().getLocationList();
 
     if(_departure.length != 0){
-    if(widget.trip.startLocation != null){
-      _selectedDeparture = widget.trip.startLocation;
+    if(widget.selectedDeparture != null && widget.selectedDeparture.isNotEmpty){
+      _selectedDeparture = widget.selectedDeparture;
     }else{
       _selectedDeparture = _departure[0];
     }
 
-    if(widget.trip.endLocation != null){
-      _selectedArrive = widget.trip.endLocation;
+    if(widget.selectedArrive != null && widget.selectedArrive.isNotEmpty){
+      _selectedArrive = widget.selectedArrive;
     }else{
       _selectedArrive = _departure[0];
     }}
 
-    if(widget.trip.travelDate != null){
-      _selectedDate = widget.trip.travelDate;
+    if(widget.selectedDate != null){
+      _selectedDate = widget.selectedDate;
     }else{
       _selectedDate = DateTime.now();
     }
@@ -121,7 +121,7 @@ class _SelectLocationState extends State<SelectLocation> {
             list: _departure, 
             onChange: (val){
               print(val);
-              widget.trip.startLocation = val;
+              _selectedDeparture = val;
             }, 
             selectedText: _selectedDeparture
           ),
@@ -161,7 +161,7 @@ class _SelectLocationState extends State<SelectLocation> {
             list: _arrive, 
             onChange: (val){
               print(val);
-              widget.trip.endLocation = val;
+              _selectedArrive = val;
             }, 
             selectedText: _selectedArrive
           ),
@@ -198,9 +198,9 @@ class _SelectLocationState extends State<SelectLocation> {
             ),
           ),
           CustomDatePicker(
-            initDate: DateTime.now(), 
+            initDate: _selectedDate, 
             onChange: (val){
-              widget.trip.travelDate = val;
+              _selectedDate = val;
             }, 
             title: "Date"
           ),

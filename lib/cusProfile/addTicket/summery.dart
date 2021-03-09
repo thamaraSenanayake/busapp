@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
@@ -21,78 +22,87 @@ class _SummeryState extends State<Summery> {
   List<Widget> _rowList = [];
 
   _doThePayment(){
+    List<String> userList = [];
+    userList = widget.trip.userList;
+    if(!userList.contains(widget.user.email)){
+      userList.add(widget.user.email);
+    }
+    Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
     widget.nextPage();
   }
   
   _initSeat(){
 
-    for (var i = 0; i < 11; i++) {
-      _rowList.add(
-        Padding(
-          padding: const EdgeInsets.only(bottom:10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: 50,
-                // color: Colors.red,
-                child:Text(
-                  i.toString(),
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    // fontWeight: FontWeight.w500,
+    for (var item in widget.trip.seatList) {
+      if(item.status == 4){
+        _rowList.add(
+          Padding(
+            padding: const EdgeInsets.only(bottom:10.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  width: 50,
+                  // color: Colors.red,
+                  child:Text(
+                    item.number.toString(),
+                    style: TextStyle(
+                      color: AppData.blackColor,
+                      fontSize: 18,
+                      // fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                  textAlign: TextAlign.center,
                 ),
-              ),
-              Expanded(
-                child: Container(
-                  // color: Colors.green,
-                  child:Text(
-                    "Colombo To Badulla",
-                    style: TextStyle(
-                      color: AppData.blackColor,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.w500,
+                Expanded(
+                  child: Container(
+                    // color: Colors.green,
+                    child:Text(
+                      item.getInPlace+" To "+item.getOutPlace,
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        // fontWeight: FontWeight.w500,
+                      ),
+                      // textAlign: TextAlign.center,
                     ),
-                    // textAlign: TextAlign.center,
-                  ),
-                )
-              ),
-              Expanded(
-                child: Container(
-                  // color: Colors.indigo,
-                  child:Text(
-                    "10.00 AM",
-                    style: TextStyle(
-                      color: AppData.blackColor,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.w500,
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    // color: Colors.indigo,
+                    child:Text(
+                      "10.00 AM",
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        // fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ),
-              Expanded(
-                child: Container(
-                  // color: Colors.orange,
-                  child:Text(
-                    "Rs. 200.00",
-                    style: TextStyle(
-                      color: AppData.blackColor,
-                      fontSize: 18,
-                      // fontWeight: FontWeight.w500,
+                  )
+                ),
+                Expanded(
+                  child: Container(
+                    // color: Colors.orange,
+                    child:Text(
+                      "Rs. 200.00",
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        // fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                )
-              ),
-            ],
-          ),
-        )
-      );  
+                  )
+                ),
+              ],
+            ),
+          )
+        );  
+        
+      }
     }
 
     setState(() {

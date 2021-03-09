@@ -8,7 +8,8 @@ import '../const.dart';
 
 class GetLocation extends StatefulWidget {
   final Function(String,LatLng) setLocation;
-  GetLocation({Key key,@required this.setLocation}) : super(key: key);
+  final String initLocation;
+  GetLocation({Key key,@required this.setLocation,@required this.initLocation}) : super(key: key);
 
   @override
   _GetLocationState createState() => _GetLocationState();
@@ -52,6 +53,7 @@ class _GetLocationState extends State<GetLocation> {
         _position = LatLng(lat, lng);
         _location = detail.result.name;
       });
+      widget.setLocation(_location,_position);
     }
   }
 

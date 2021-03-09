@@ -75,9 +75,9 @@ class Database{
         {
           "email":item.email,
           "number":item.number,
-          "status":item.status,
-          "getInLocation":TypeConvert().latLngToString(item.getInLocation),
-          "getOutLocation":TypeConvert().latLngToString(item.getOutLocation),
+          "status":item.status == 4?1:item.status,
+          "getInLocation":item.getInLocation != null? TypeConvert().latLngToString(item.getInLocation):"",
+          "getOutLocation":item.getOutLocation != null? TypeConvert().latLngToString(item.getOutLocation):"",
           "getInPlace":item.getInPlace,
           "getOutPlace":item.getOutPlace,
         }
@@ -129,6 +129,8 @@ class Database{
     QuerySnapshot querySnapshot;
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(date.millisecondsSinceEpoch);
     final timestampNextDate = Timestamp.fromMillisecondsSinceEpoch(date.add(Duration(days: 1)).millisecondsSinceEpoch);
+    print(DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch).day);
+    print(DateTime.fromMillisecondsSinceEpoch(timestampNextDate.millisecondsSinceEpoch).day);
     querySnapshot = await trips
     .where('startLocation',isEqualTo: startLocation)
     .where('endLocation',isEqualTo: endLocation)

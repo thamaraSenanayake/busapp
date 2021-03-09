@@ -4,10 +4,12 @@ class Seat{
   String email;
   int number;
   int status;
+  DateTime arriveTime;
   LatLng getInLocation;
   LatLng getOutLocation;
   String getInPlace;
   String getOutPlace;
+  double ticketPrice;
 }
 
 // status = 3 unavailable 

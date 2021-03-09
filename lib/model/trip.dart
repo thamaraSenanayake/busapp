@@ -17,6 +17,9 @@ class Trip{
   String busName;
   bool highWayBus;
   String id;
+  double totalDistance;
+  double totalPrice;
+
 }
 
 enum BusType{

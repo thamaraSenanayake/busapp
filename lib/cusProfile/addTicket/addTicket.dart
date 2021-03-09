@@ -4,6 +4,7 @@ import 'package:quickbussl/cusProfile/addTicket/selectLocation.dart';
 import 'package:quickbussl/cusProfile/addTicket/selectSeat.dart';
 import 'package:quickbussl/cusProfile/addTicket/summery.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
+import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 
@@ -130,7 +131,7 @@ class _AddTicketStateBase extends State<AddTicketBase> {
           Container(
             child: _profilePage==CusProfilePages.SelectLocation?
             SelectLocation(
-              trip: _trip, 
+              // trip: _trip, 
               nextPage: (selectedDeparture,selectedArrive,selectedDate){
                 setState(() {
                   _title = "Select Bus";
@@ -158,7 +159,8 @@ class _AddTicketStateBase extends State<AddTicketBase> {
             ):_profilePage==CusProfilePages.SelectSeat?
             SelectSeat(
               trip: _trip, 
-              nextPage: (int seatNum){
+              nextPage: (List<Seat> seatList){
+                _trip.seatList = seatList;
                 setState(() {
                   _title = "Confirm Payment";
                   _profilePage=CusProfilePages.PayForSeat;

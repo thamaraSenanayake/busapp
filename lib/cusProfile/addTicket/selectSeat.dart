@@ -9,7 +9,7 @@ import 'package:quickbussl/module/customButton.dart';
 class SelectSeat extends StatefulWidget {
   final Trip trip;
   final User user;
-  final Function(int) nextPage; 
+  final Function(List<Seat>) nextPage; 
   SelectSeat({Key key,@required this.trip,@required this.nextPage,@required this.user}) : super(key: key);
 
   @override
@@ -23,9 +23,10 @@ class _SelectSeatState extends State<SelectSeat> {
   double _height = 0;
   List<Seat> seatCount;
   Widget _seats;
+  String _error = '';
 
   _smallBus(){
-    _rowHeight = (_height-230)/10;
+    _rowHeight = (_height-252)/10;
     _seatHeight = _rowHeight - 4;
     
 
@@ -62,9 +63,8 @@ class _SelectSeatState extends State<SelectSeat> {
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: () async {
-                    if(seatCount[index[0]].status == 0){
-                      seatCount[index[0]].status = 4;
-                      await Navigator.of(context).push(
+                    if(seatCount[index[0]].status == 0 || seatCount[index[0]].status == 4){
+                      Seat seat = await Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[0]],
@@ -73,6 +73,13 @@ class _SelectSeatState extends State<SelectSeat> {
                           opaque: false
                         ),
                       );
+                      if(seat.getInPlace.isNotEmpty){
+                        seatCount[index[0]]=seat;
+                        seatCount[index[0]].status = 4;
+                        setState(() {
+                          _error = "";
+                        });
+                      }
                       _smallBus();
                     }
                   },
@@ -86,7 +93,7 @@ class _SelectSeatState extends State<SelectSeat> {
                          padding: const EdgeInsets.all(3.0),
                          child: Text(
                            (index[0]+1).toString(),
-                      style: TextStyle(color: AppData.whiteColor,fontSize:15),
+                            style: TextStyle(color: AppData.whiteColor,fontSize:15),
                          ),
                        ), 
                       
@@ -121,9 +128,8 @@ class _SelectSeatState extends State<SelectSeat> {
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: () async {
-                    if(seatCount[index[3]].status == 0){
-                      seatCount[index[3]].status = 4;
-                      await Navigator.of(context).push(
+                    if(seatCount[index[3]].status == 0 || seatCount[index[3]].status == 4){
+                      Seat seat = await Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[3]],
@@ -132,6 +138,13 @@ class _SelectSeatState extends State<SelectSeat> {
                           opaque: false
                         ),
                       );
+                      if(seat.getInPlace.isNotEmpty){
+                        seatCount[index[3]]=seat;
+                        seatCount[index[3]].status = 4;
+                        setState(() {
+                          _error = "";
+                        });
+                      }
                       _smallBus();
                     }
                   },
@@ -170,9 +183,8 @@ class _SelectSeatState extends State<SelectSeat> {
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: () async {
-                    if(seatCount[index[1]].status == 0){
-                      seatCount[index[1]].status = 4;
-                      await Navigator.of(context).push(
+                    if(seatCount[index[1]].status == 0 || seatCount[index[1]].status == 4){
+                      Seat seat = await Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[1]],
@@ -181,6 +193,13 @@ class _SelectSeatState extends State<SelectSeat> {
                           opaque: false
                         ),
                       );
+                      if(seat.getInPlace.isNotEmpty){
+                        seatCount[index[1]]=seat;
+                        seatCount[index[1]].status = 4;
+                        setState(() {
+                          _error = "";
+                        });
+                      }
                       _smallBus();
                     }
                   },
@@ -225,9 +244,8 @@ class _SelectSeatState extends State<SelectSeat> {
                 padding: const EdgeInsets.all(2.0),
                 child: GestureDetector(
                   onTap: () async {
-                    if(seatCount[index[2]].status == 0){
-                      seatCount[index[2]].status = 4;
-                      await Navigator.of(context).push(
+                    if(seatCount[index[2]].status == 0 || seatCount[index[2]].status == 4){
+                      Seat seat = await Navigator.of(context).push(
                         PageRouteBuilder(
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[2]],
@@ -236,6 +254,13 @@ class _SelectSeatState extends State<SelectSeat> {
                           opaque: false
                         ),
                       );
+                      if(seat.getInPlace.isNotEmpty){
+                        seatCount[index[2]]=seat;
+                        seatCount[index[2]].status = 4;
+                        setState(() {
+                          _error = "";
+                        });
+                      }
                       _smallBus();
                     }
                   },
@@ -292,6 +317,23 @@ class _SelectSeatState extends State<SelectSeat> {
       _smallBus();
     });
   }
+
+  _done(){
+    int selectSeatCount = 0;
+    for (var item in seatCount) {
+      if(item.status == 4){
+        selectSeatCount++;
+      }
+    }
+    if(selectSeatCount == 0){
+      setState(() {
+        _error= "Select at least one seat";
+      });
+    }else{
+      widget.nextPage(seatCount);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     setState(() {
@@ -303,13 +345,25 @@ class _SelectSeatState extends State<SelectSeat> {
         children: [
           Container(
             width: _width,
-            // height: _height-166,
-            // color: Colors.red,
             child: _seats,
+          ),
+          Text(
+            _error,
+            style: TextStyle(
+              fontSize: 16,
+              color: AppData.primaryColor2,
+              fontWeight: FontWeight.w600
+            ),
           ),
           Padding(
             padding: const EdgeInsets.only(top:5.0),
-            child: CustomButton(text: "Done", buttonClick: (){widget.nextPage(1);}),
+            child: CustomButton(
+              text: "Done", 
+              buttonClick: (){
+                _done();
+                
+              }
+            ),
           )
         ],
       ),
