@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
@@ -73,7 +74,7 @@ class _SummeryState extends State<Summery> {
                   child: Container(
                     // color: Colors.indigo,
                     child:Text(
-                      "10.00 AM",
+                      DateFormat.jm().format(item.arriveTime),
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
@@ -87,7 +88,7 @@ class _SummeryState extends State<Summery> {
                   child: Container(
                     // color: Colors.orange,
                     child:Text(
-                      "Rs. 200.00",
+                      "Rs."+item.ticketPrice.toStringAsFixed(0)+'/=',
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,

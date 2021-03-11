@@ -42,17 +42,18 @@ class _SelectLocationState extends State<SelectLocation> {
     _departure = _arrive = await Database().getLocationList();
 
     if(_departure.length != 0){
-    if(widget.selectedDeparture != null && widget.selectedDeparture.isNotEmpty){
-      _selectedDeparture = widget.selectedDeparture;
-    }else{
-      _selectedDeparture = _departure[0];
+      if(widget.selectedDeparture != null && widget.selectedDeparture.isNotEmpty){
+        _selectedDeparture = widget.selectedDeparture;
+      }else{
+        _selectedDeparture = _departure[0];
+      }
+  
+      if(widget.selectedArrive != null && widget.selectedArrive.isNotEmpty){
+        _selectedArrive = widget.selectedArrive;
+      }else{
+        _selectedArrive = _arrive[0];
+      }
     }
-
-    if(widget.selectedArrive != null && widget.selectedArrive.isNotEmpty){
-      _selectedArrive = widget.selectedArrive;
-    }else{
-      _selectedArrive = _departure[0];
-    }}
 
     if(widget.selectedDate != null){
       _selectedDate = widget.selectedDate;

@@ -68,7 +68,8 @@ class _SelectSeatState extends State<SelectSeat> {
                         PageRouteBuilder(
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[0]],
-                            user: widget.user,
+                            user: widget.user, 
+                            trip: widget.trip,
                           ),
                           opaque: false
                         ),
@@ -134,6 +135,7 @@ class _SelectSeatState extends State<SelectSeat> {
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[3]],
                             user: widget.user,
+                            trip: widget.trip,
                           ),
                           opaque: false
                         ),
@@ -189,6 +191,7 @@ class _SelectSeatState extends State<SelectSeat> {
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[1]],
                             user: widget.user,
+                            trip: widget.trip,
                           ),
                           opaque: false
                         ),
@@ -250,6 +253,7 @@ class _SelectSeatState extends State<SelectSeat> {
                           pageBuilder: (context, _, __) => AddDetails(
                             seat:seatCount[index[2]],
                             user: widget.user,
+                            trip: widget.trip,
                           ),
                           opaque: false
                         ),

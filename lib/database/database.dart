@@ -93,7 +93,7 @@ class Database{
   
   Future addTrip(Trip trip) async{
     List<Map<String,dynamic>> seatList =[];
-    for (var i = 0; i < 29; i++) {
+    for (var i = 0; i < 28; i++) {
       seatList.add(
         {
           "email":"",
@@ -103,6 +103,7 @@ class Database{
           "getOutLocation":"",
           "getInPlace":"",
           "getOutPlace":"",
+          "ticketPrice":0.0
         }
       );
     }
@@ -122,6 +123,8 @@ class Database{
       "id":trip.id,
       "startPosition":TypeConvert().latLngToString(trip.startPosition),
       "endPosition":TypeConvert().latLngToString(trip.endPosition),
+      "totalDistance":trip.totalDistance,
+      "totalPrice":trip.totalPrice,
     });
   }
 
@@ -151,8 +154,12 @@ class Database{
     .getDocuments();
 
     for (var item in querySnapshot.documents) {
-      _locationList.add(item['startLocation']);
-      _locationList.add(item['endLocation']);
+      if(! _locationList.contains(item['startLocation'])){
+        _locationList.add(item['startLocation']);
+      }
+      if(! _locationList.contains(item['endLocation'])){
+        _locationList.add(item['endLocation']);
+      }
     }
 
     return _locationList;
@@ -228,6 +235,7 @@ class Database{
             ..getOutLocation = seat["getOutLocation"].toString().isNotEmpty? TypeConvert().stringToLatLng(seat["getOutLocation"]):null
             ..getInPlace = seat["getInPlace"]
             ..getOutPlace = seat["getOutPlace"]
+            ..ticketPrice = seat['ticketPrice']
         );
 
       }
@@ -248,6 +256,8 @@ class Database{
         ..busName = item['busName']
         ..highWayBus = item['highWayBus']
         ..id = item['id']
+        ..totalDistance = item["totalDistance"]
+        ..totalPrice = item["totalPrice"]
       );
     }
 

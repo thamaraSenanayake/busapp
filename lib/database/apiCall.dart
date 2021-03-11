@@ -5,8 +5,14 @@ import 'package:http/http.dart' as http;
 
 import '../const.dart';
 
+class DistanceValues{
+  final Duration duration;
+  final int distance;
 
-Future<int> getDistance(LatLng start ,LatLng end) async{
+  DistanceValues({this.duration, this.distance});
+}
+
+Future<DistanceValues> getDistance(LatLng start ,LatLng end) async{
   var url ="https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=${start.latitude},${start.longitude}&destinations=${end.latitude}%2C${end.longitude}%7C&key=${AppData.kGoogleApiKey}";
 
   //send to server DB
@@ -18,8 +24,12 @@ Future<int> getDistance(LatLng start ,LatLng end) async{
   var body = json.decode(response.body.toString());
   print(body["rows"][0]["elements"][0]["distance"]["value"]);
   print(body["rows"][0]["elements"][0]["duration"]["value"]);
+  DistanceValues values =DistanceValues(
+    duration:Duration(seconds:body["rows"][0]["elements"][0]["duration"]["value"] ),
+    distance:body["rows"][0]["elements"][0]["distance"]["value"],
+  );
 
-  return body["rows"][0]["elements"][0]["duration"]["value"];
+  return values;
 }
 
 // {

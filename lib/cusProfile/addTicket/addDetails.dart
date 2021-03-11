@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quickbussl/database/apiCall.dart';
 import 'package:quickbussl/model/seat.dart';
+import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/getLocation.dart';
@@ -10,7 +12,12 @@ import '../../const.dart';
 class AddDetails extends StatefulWidget {
   final User user;
   final Seat seat;
-  AddDetails({Key key,@required this.seat,@required this.user}) : super(key: key);
+  final Trip trip;
+  // final double tripDistance;
+  // final double fullPrice;
+  // final DateTime startTime;
+  // final LatLng startPosition;
+  AddDetails({Key key,@required this.seat,@required this.user,@required this.trip}) : super(key: key);
 
   @override
   _AddDetailsState createState() => _AddDetailsState();
@@ -22,6 +29,30 @@ class _AddDetailsState extends State<AddDetails> {
   String _getOutPlaceError = "";
   String _title = "Add Details";
   double _width=0.0;
+
+  _setArriveTime() async {
+    if( _seat.getInLocation != null ){
+      DistanceValues _values = await getDistance(_seat.getInLocation,widget.trip.startPosition);
+      _seat.arriveTime =  widget.trip.startTime.add(_values.duration);
+    }
+  }
+
+  _setEndTime() async {
+    if( _seat.getInLocation != null && _seat.getOutLocation != null ){
+      DistanceValues _values = await getDistance(_seat.getInLocation,_seat.getOutLocation); 
+
+      if(_values.distance > widget.trip.totalDistance/2){
+        setState(() {
+          _seat.ticketPrice = widget.trip.totalPrice;
+        });
+      }else{
+        setState(() {
+          _seat.ticketPrice = widget.trip.totalPrice/2;
+        });
+      }
+    }
+    
+  }
 
   _done(){
     bool _validation = true;
@@ -134,7 +165,8 @@ class _AddDetailsState extends State<AddDetails> {
                   });
                   _seat.getInLocation = position;
                   _seat.getInPlace = place;
-
+                  _setEndTime();
+                  _setArriveTime();
                 }, initLocation: _seat.getInPlace,
               ),
               Padding(
@@ -173,15 +205,15 @@ class _AddDetailsState extends State<AddDetails> {
                   });
                   _seat.getOutLocation = position;
                   _seat.getOutPlace = place;
-
+                  _setEndTime();
                 }, initLocation: _seat.getOutPlace,
               ),
-              Padding(
+              _seat.ticketPrice != null?Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 30),
                 child: Container(
                   width:_width,
                   child: Text(
-                    "Ticket price: Rs.200/=",
+                    "Ticket price: Rs.${_seat.ticketPrice.toStringAsFixed(0)}/=",
                     style: TextStyle(
                       color: AppData.blackColor,
                       fontSize: 20,
@@ -190,7 +222,7 @@ class _AddDetailsState extends State<AddDetails> {
                     ),
                   ),
                 ),
-              ),
+              ):Container(),
               SizedBox(
                 height: 10,
               ),

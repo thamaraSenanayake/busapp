@@ -39,11 +39,14 @@ class _AddTripState extends State<AddTrip> {
   String _travelDateError = '';
   String _startLocationError = '';
   String _endLocationError = '';
+  String _ticketPriceError = '';
   TextEditingController _timeEstimate = TextEditingController();
 
   
 
   _done() async {
+    FocusScope.of(context).unfocus();
+
     bool _validation = true;
     if(_trip.startLocation.isEmpty){
       setState(() {
@@ -54,6 +57,12 @@ class _AddTripState extends State<AddTrip> {
     if(_trip.endLocation.isEmpty){
       setState(() {
         _endLocationError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_trip.totalPrice == 0){
+      setState(() {
+        _ticketPriceError = "Required Field";
       });
       _validation = false;
     }
@@ -74,9 +83,10 @@ class _AddTripState extends State<AddTrip> {
 
   _setEndTime() async {
     if(_trip.startLocation.isNotEmpty && _trip.endLocation.isNotEmpty && _trip.endPosition != null && _trip.startTime != null ){
-      _duration = await getDistance(_trip.startPosition,_trip.endPosition ); 
+      DistanceValues _values = await getDistance(_trip.startPosition,_trip.endPosition ); 
 
-      _trip.endTime = _trip.startTime.add(Duration(seconds:_duration));
+      _trip.endTime = _trip.startTime.add(_values.duration);
+      _trip.totalDistance = _values.distance/1;
       
       _timeEstimate.text = DateFormat.jm().format(_trip.endTime);
     }
@@ -150,6 +160,7 @@ class _AddTripState extends State<AddTrip> {
     super.initState();
     _trip.startLocation = "";
     _trip.endLocation = "";
+    _trip.totalPrice = 0;
     _trip.highWayBus = false;
     _trip.busOwnerEmail = widget.user.email;
     _trip.startTime = DateTime.now();
@@ -398,6 +409,46 @@ class _AddTripState extends State<AddTrip> {
                 }, 
                 errorText: "",
                 enable: false,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top:10.0,bottom: 0),
+                child: Container(
+                  width: _width - 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Full ticket price : ",
+                        style: TextStyle(
+                          color: AppData.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          backgroundColor: Colors.white
+                        ),
+                      ),
+                      Text(
+                        _ticketPriceError,
+                        style: TextStyle(
+                          color: AppData.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              TextBox(
+                shadowDisplay: false,
+                textBoxKey: null, 
+                textInputType: TextInputType.number,
+                onChange: (val){
+                  if(val.isNotEmpty){
+                    _trip.totalPrice = double.parse(val);
+                  }
+                }, 
+                errorText: "",
               ),
 
               CheckboxListTile(
