@@ -10,6 +10,7 @@ import 'package:quickbussl/cusProfile/bookedTrip.dart';
 import 'package:quickbussl/login/loginbase.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
+import 'package:quickbussl/module/topBar.dart';
 
 import '../const.dart';
 
@@ -95,42 +96,12 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          height: 40,
-                          width: _width,
-                          // decoration: BoxDecoration(
-                          //   color: AppData.primaryColor,
-                          // ),
-                          child: Stack(
-                            children: [
-                              GestureDetector(
-                                onTap: (){
-                                  openDrawer();
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: 70,
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.menu,
-                                      color:AppData.primaryColor,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Align(
-                                alignment: Alignment.center,
-                                child: Text(
-                                  _title,
-                                  style: TextStyle(
-                                    color: AppData.primaryColor,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                        TopBarModule(
+                          title: _title, 
+                          buttonClick: (){
+                            openDrawer();
+                          }, 
+                          iconData: Icons.menu
                         ),
                         Expanded(
                           child:TabBarView(
@@ -163,6 +134,7 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 
                                 if(mounted){
                                   setState(() {
+                                    _title = "Add Trip";
                                     _profilePage = BusOwnerPages.AddTrip;
                                   });
                                 } 
@@ -170,6 +142,7 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 _tabController.animateTo(1);
                                 if(mounted){
                                   setState(() {
+                                    _title = "Trips to Go";
                                     _profilePage = BusOwnerPages.OnGoing;
                                   });
                                 } 
@@ -178,6 +151,7 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 _tabController.animateTo(2);
                                 if(mounted){
                                   setState(() {
+                                      _title = "Trip History";
                                     _profilePage = BusOwnerPages.PastTrip;
                                   });
                                 } 

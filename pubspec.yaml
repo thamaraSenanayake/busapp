@@ -28,10 +28,10 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
+  # cloud_firestore: ^1.0.0
   cupertino_icons: ^1.0.0
   cloud_firestore: ^0.13.5
   google_maps_webservice: ^0.0.19
-  # cloud_firestore: ^1.0.0
   google_api_headers: ^0.1.1+2
   flutter_spinkit: "^4.1.2"
   google_maps_flutter: ^0.5.28+1
@@ -41,6 +41,8 @@ dependencies:
   flutter_secure_storage: ^3.3.5
   http: ^0.12.2
   flutter_google_places: ^0.2.8
+  flutter_polyline_points: ^0.2.4
+
 
 
 dev_dependencies:
@@ -62,6 +64,8 @@ flutter:
   assets:
     - assets/background.jpg
     - assets/logo.jpeg
+    - assets/bus.png
+    - assets/map_style.txt
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

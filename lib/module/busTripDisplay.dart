@@ -69,7 +69,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                   height: 8,
                 ),
 
-                Row(
+                widget.busTrip.endTime.difference(DateTime.now()).inSeconds>1? Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -129,7 +129,7 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                                 ),
                               ),
                               TextSpan(
-                                text: '28 Seats left',
+                                text: '29 Seats left',
                                 style: TextStyle(
                                   color: AppData.blackColor,
                                   fontSize: 16,
@@ -142,6 +142,16 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                       ],
                     )
                   ],
+                ):Container(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child:Text(
+                    'Traveled date '+DateFormat.yMEd().format(widget.busTrip.travelDate) ,
+                    style: TextStyle(
+                      color: AppData.blackColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
+                    ),
+                  ),
                 ),
 
                 Row(

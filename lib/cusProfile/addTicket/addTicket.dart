@@ -7,6 +7,7 @@ import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
+import 'package:quickbussl/module/topBar.dart';
 
 import '../../const.dart';
 
@@ -46,20 +47,26 @@ class _AddTicketStateBase extends State<AddTicketBase> {
     _initValues();
   }
 
-  _back(){
-    if(_profilePage == CusProfilePages.SelectBus){
+  _topBarButtonClick(){
+    if(_profilePage == CusProfilePages.SelectLocation){
+      setState(() {
+        _title = "Enter Location";
+        widget.listener.openDrawer();
+      });
+    }
+    else if(_profilePage == CusProfilePages.SelectBus){
       setState(() {
         _title = "Enter Location";
         _profilePage = CusProfilePages.SelectLocation;
       });
     }
-    if(_profilePage == CusProfilePages.SelectSeat){
+    else if(_profilePage == CusProfilePages.SelectSeat){
       setState(() {
         _title = "Enter Location";
         _profilePage = CusProfilePages.SelectBus;
       });
     }
-    if(_profilePage == CusProfilePages.PayForSeat){
+    else if(_profilePage == CusProfilePages.PayForSeat){
       setState(() {
         _title = "Enter Location";
         _profilePage = CusProfilePages.SelectSeat;
@@ -75,58 +82,10 @@ class _AddTicketStateBase extends State<AddTicketBase> {
     return Container(
       child:Column(
         children: [
-          Container(
-            height: 40,
-            width: _width,
-            // decoration: BoxDecoration(
-            //   color: AppData.primaryColor,
-            // ),
-            child: Stack(
-              children: [
-                _profilePage == CusProfilePages.SelectLocation?GestureDetector(
-                  onTap: (){
-                    widget.listener.openDrawer();
-                  },
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    child: Center(
-                      child: Icon(
-                        Icons.menu,
-                        color:AppData.primaryColor,
-                        size: 35,
-                      ),
-                    ),
-                  ),
-                ):GestureDetector(
-                  onTap: (){
-                    _back();
-                  },
-                  child: Container(
-                    height: 70,
-                    width: 70,
-                    child: Center(
-                      child: Icon(
-                        Icons.arrow_back,
-                        color:AppData.primaryColor,
-                        size: 35,
-                      ),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    _title,
-                    style: TextStyle(
-                      color: AppData.primaryColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700
-                    ),
-                  ),
-                )
-              ],
-            ),
+          TopBarModule(
+            title: _title, 
+            buttonClick: _topBarButtonClick, 
+            iconData: _profilePage == CusProfilePages.SelectLocation?Icons.menu:Icons.arrow_back
           ),
           Container(
             child: _profilePage==CusProfilePages.SelectLocation?

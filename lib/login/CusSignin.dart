@@ -81,8 +81,8 @@ class _CusSigningState extends State<CusSigning> {
       });
       Database().addUser(_user);
       final storage = new FlutterSecureStorage();
-      storage.write(key: KeyContainer.USERNAME,value: _user.email);
       storage.write(key: KeyContainer.PASSWORD,value: _user.password);
+      storage.write(key: KeyContainer.USERNAME,value: _user.email);
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:quickbussl/appBarWindows/aboutUs.dart';
+import 'package:quickbussl/appBarWindows/editDetails.dart';
+import 'package:quickbussl/appBarWindows/passwordChange.dart';
 import 'package:quickbussl/cusProfile/addTicket/addTicket.dart';
 import 'package:quickbussl/cusProfile/bookedHistory.dart';
 import 'package:quickbussl/cusProfile/bookedTrip.dart';
@@ -108,8 +111,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                                 selectedDate: _selectedDate, 
                                 selectedDeparture: _selectedDeparture,
                               ),
-                              BookedTrip(trip: _trip,listener: this,),
-                              BookedHistory(trip: _trip,listener: this,),
+                              BookedTrip(trip: _trip,listener: this, user: widget.user,),
+                              BookedHistory(trip: _trip,listener: this,user: widget.user),
                             ],
                           )
                         ),
@@ -305,6 +308,14 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => EditUserDetails(
+                      user: widget.user,
+                    ),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -318,6 +329,14 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => UpdatePassword(
+                      user: widget.user,
+                    ),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -331,6 +350,12 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => AboutUs(),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -344,6 +369,12 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => AboutUs(),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(

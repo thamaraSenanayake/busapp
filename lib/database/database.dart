@@ -93,7 +93,7 @@ class Database{
   
   Future addTrip(Trip trip) async{
     List<Map<String,dynamic>> seatList =[];
-    for (var i = 0; i < 28; i++) {
+    for (var i = 0; i < 29; i++) {
       seatList.add(
         {
           "email":"",
@@ -190,7 +190,7 @@ class Database{
     QuerySnapshot querySnapshot;
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
-    .where('busOwnerEmail',arrayContains: userEmail)
+    .where('busOwnerEmail',isEqualTo: userEmail)
     .where('travelDate',isGreaterThanOrEqualTo:timestamp)
     .getDocuments();
 
@@ -201,7 +201,7 @@ class Database{
     QuerySnapshot querySnapshot;
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
-    .where('busOwnerEmail',arrayContains: userEmail)
+    .where('busOwnerEmail',isEqualTo: userEmail)
     .where('travelDate',isLessThan:timestamp)
     .getDocuments();
 
