@@ -1,4 +1,5 @@
 
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -6,7 +7,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:quickbussl/busowner/map/mapInfoView.dart';
 import 'package:quickbussl/const.dart';
+import 'package:quickbussl/model/seat.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/module/locationError.dart';
 import 'package:quickbussl/module/topBar.dart';
@@ -21,20 +24,18 @@ class DisplayPassengers extends StatefulWidget {
 }
 
 class _DisplayPassengersState extends State<DisplayPassengers> implements LocationErrorListener{
-  CameraPosition  cameraPosition;
-  LatLng _currentLatLang;
+  // CameraPosition  cameraPosition;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   GoogleMapController mapController;
   String _mapStyle;
-  // Object for PolylinePoints
+
   PolylinePoints polylinePoints;
-
-  // List of coordinates to join
   List<LatLng> polylineCoordinates = [];
-
-  // Map storing polylines created by connecting
-  // two points
   Map<PolylineId, Polyline> polylines = {};
+  bool _displayBottomBar = false;
+  Seat _clickedSeat;
+  
+  double _width= 0;
 
   _getCurrentPosition() async {
     print("get location");
@@ -43,40 +44,29 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
       position = await getCurrentPosition(desiredAccuracy:LocationAccuracy.best);
     }
     catch (e){
-      // Navigator.of(context).push(
-      //   PageRouteBuilder(
-      //     pageBuilder: (context, _, __) => LocationError(
-      //       listener: this,
-      //     ),
-      //     opaque: false
-      //   ),
-      // );
-      // return;
     }
     if(position != null){
       _addMark(LatLng(position.latitude, position.longitude));
     }
-    
+    _loadUser();  
   }
 
-  _loadShopsNearBy() async {
+  _loadUser() async {
     
     final Uint8List markerIcon = await getBytesFromAsset('assets/user.png', 150);
 
     for (var item in widget.trip.seatList) {
       if(item.status == 1){
         var marker = Marker(
+          onTap: (){
+            setState(() {
+              _clickedSeat = item;
+              _displayBottomBar = true;
+            });
+          },
           markerId: MarkerId(item.number.toString()),
           position: LatLng(item.getInLocation.latitude,item.getInLocation.longitude),
           icon: BitmapDescriptor.fromBytes(markerIcon),
-          infoWindow: InfoWindow(
-            title: item.email,
-            // snippet: item.shopAddress+"\nview shop...",
-            anchor:Offset(0.5, 0.0), 
-            onTap: (){
-              // widget.signUpSignInListener.viewFooDMenu(item);
-            }
-          )
         );
         markers[MarkerId(item.number.toString())] = marker;
       }
@@ -96,10 +86,6 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
     );
 
     setState(() {
-      cameraPosition =  CameraPosition(
-        target: LatLng(position.latitude,position.longitude),
-        zoom: 15
-      );
       markers[MarkerId("YOUR_LOCATION")] = marker;
     });
   }
@@ -152,31 +138,52 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
   
   @override
   Widget build(BuildContext context) {
+    setState(() {
+      _width = MediaQuery.of(context).size.width;
+    });
     return Scaffold(
       body: SafeArea(
         bottom: false,
         child: Column(
           children: [
             TopBarModule(
-              title: "Passengers Locations", 
+              title: "Passenger Locations", 
               buttonClick: (){
                 Navigator.pop(context);
               }, 
               iconData: Icons.arrow_back
             ),
             Expanded(
-              child:Container(
-                child:cameraPosition != null? GoogleMap(
-                  polylines: Set<Polyline>.of(polylines.values),
-                  initialCameraPosition: cameraPosition,
-                  onMapCreated: _onMapCreated,
-                  mapToolbarEnabled: true,
-                  // onCameraMoveStarted: cameraMove(),
-                  markers: Set<Marker>.of(markers.values),
-                  onTap: (latLng){
-                    // _addMark(latLng);
-                  },
-                ):Container(),
+              child:Stack(
+                children: [
+                  Container(
+                    child: GoogleMap(
+                      polylines: Set<Polyline>.of(polylines.values),
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng( 6.927079,79.861244),
+                        zoom: 8
+                      ),
+                      onMapCreated: _onMapCreated,
+                      mapToolbarEnabled: true,
+                      markers: Set<Marker>.of(markers.values),
+                      onTap: (latLng){
+                        if(_displayBottomBar){
+                          setState(() {
+                            _displayBottomBar = false;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+
+                  _displayBottomBar?Padding(
+                    padding: const EdgeInsets.only(bottom:30.0),
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: MapInfoView(seat: _clickedSeat)
+                    ),
+                  ):Container()
+                ],
               ) 
             )
           ],
@@ -190,6 +197,19 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
       mapController = controller;
       // controller.setMapStyle(_mapStyle);
     });
+
+    LatLng latLng_1 = widget.trip.startPosition;
+    LatLng latLng_2 = widget.trip.endPosition;
+    LatLngBounds bound;
+    if(latLng_2.longitude > latLng_1.longitude){
+      bound = LatLngBounds(southwest: latLng_2, northeast: latLng_1);
+    }else{
+      bound = LatLngBounds(southwest: latLng_1, northeast: latLng_2);
+    }
+
+
+    CameraUpdate u2 = CameraUpdate.newLatLngBounds(bound, 50);
+    this.mapController.animateCamera(u2);
   }
 
   Future<Uint8List> getBytesFromAsset(String path, int width) async {

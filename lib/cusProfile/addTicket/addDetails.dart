@@ -69,6 +69,7 @@ class _AddDetailsState extends State<AddDetails> {
       _validation = false;
     }
     if(_validation){
+      _seat.email = widget.user.email;
       Navigator.pop(context,_seat);
     }
   }

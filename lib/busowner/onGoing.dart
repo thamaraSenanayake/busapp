@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:quickbussl/busowner/displayPasengers.dart';
+import 'package:quickbussl/busowner/map/displayPasengers.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';

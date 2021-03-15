@@ -22,7 +22,18 @@ class Database{
       return null;
     }
       
-    return _setUser(querySnapshot);;
+    return _setUser(querySnapshot);
+  }
+
+  Future<User> getUser(String email ) async{
+    QuerySnapshot querySnapshot;
+
+    querySnapshot = await users
+    .where('email',isEqualTo: email )
+    .getDocuments();
+
+      
+    return _setUser(querySnapshot);
   }
 
   Future<User> _setUser(QuerySnapshot querySnapshot) async {
@@ -32,7 +43,6 @@ class Database{
       user = User()
         ..email = item["email"]
         ..name = item["name"]
-        ..password = item["password"]
         ..idNum = item["idNum"]
         ..phone = item["phone"]
         ..userType =TypeConvert().stringToUserType(item["userType"]);

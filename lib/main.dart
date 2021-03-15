@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quickbussl/login/loginbase.dart';
-import 'package:quickbussl/login/splashscreen.dart';
 
 void main() {
+  // Workmanager.initialize(callbackDispatcher);
+
   runApp(MyApp());
 }
 
