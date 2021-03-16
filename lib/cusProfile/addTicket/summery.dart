@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 
 import '../../const.dart';
 
@@ -21,14 +24,47 @@ class _SummeryState extends State<Summery> {
   double _width = 0.0;
   double _height =0.0;
   List<Widget> _rowList = [];
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  _doThePayment(){
+
+  _doThePayment() async {
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation("Asia/Colombo")); 
+
     List<String> userList = [];
     userList = widget.trip.userList;
     if(!userList.contains(widget.user.email)){
       userList.add(widget.user.email);
     }
     Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
+
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false
+      );
+
+    const IOSNotificationDetails notificationDetails = IOSNotificationDetails(badgeNumber: 1);
+    const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: notificationDetails);
+    for (var item in widget.trip.seatList) {
+      if(item.status == 4){
+        DateTime notificationTime = item.arriveTime.subtract(Duration(minutes: 15));
+        await flutterLocalNotificationsPlugin.zonedSchedule(
+          0,
+          '${widget.trip.startLocation}-${widget.trip.endLocation}',
+          'Bus will arrived to ${item.getInPlace} within 10-15 minutes',
+          tz.TZDateTime.local(notificationTime.year,notificationTime.month,notificationTime.day,notificationTime.hour,notificationTime.minute,notificationTime.second),
+          platformChannelSpecifics,
+          androidAllowWhileIdle: true,
+          uiLocalNotificationDateInterpretation:UILocalNotificationDateInterpretation.absoluteTime,
+          payload: 'item x'
+        );
+      }
+      
+    }
+
     widget.nextPage();
   }
   

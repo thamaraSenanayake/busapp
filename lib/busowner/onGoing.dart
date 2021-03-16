@@ -35,7 +35,7 @@ class _OnGoingState extends State<OnGoing> implements BusTripDisplayListener{
     _tripList = await Database().onGoingTripBusOwner(widget.user.email);
     for (var item in _tripList) {
       _widgetList.add(
-        BusTripDisplay(busTrip: item, listener: this)
+        BusTripDisplay(busTrip: item, listener: this,userType: widget.user.userType,)
       );
     }
     _loading = false;
@@ -82,5 +82,11 @@ class _OnGoingState extends State<OnGoing> implements BusTripDisplayListener{
           opaque: false
         ),
       );
+  }
+
+  @override
+  locationGetOrSet(Trip busTrip) {
+    // TODO: implement locationGetOrSet
+    throw UnimplementedError();
   }
 }

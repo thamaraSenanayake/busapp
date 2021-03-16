@@ -35,7 +35,7 @@ class _BookedTripState extends State<BookedTrip> implements BusTripDisplayListen
     _tripList = await Database().bookedTripCustomer(widget.user.email);
     for (var item in _tripList) {
       _widgetList.add(
-        BusTripDisplay(busTrip: item, listener: this)
+        BusTripDisplay(busTrip: item, listener: this,userType: widget.user.userType,)
       );
     }
     _loading = false;
@@ -81,6 +81,12 @@ class _BookedTripState extends State<BookedTrip> implements BusTripDisplayListen
   @override
   busTripClick(Trip busTrip) {
     // TODO: implement busTripClick
+    throw UnimplementedError();
+  }
+
+  @override
+  locationGetOrSet(Trip busTrip) {
+    // TODO: implement locationGetOrSet
     throw UnimplementedError();
   }
 }

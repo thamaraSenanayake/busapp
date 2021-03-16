@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:quickbussl/model/trip.dart';
+import 'package:quickbussl/model/user.dart';
+import 'package:quickbussl/module/customButton.dart';
 
 import '../const.dart';
 
 class BusTripDisplay extends StatefulWidget {
   final Trip busTrip;
+  final UserType userType;
   final BusTripDisplayListener listener;
-  BusTripDisplay({Key key,@required this.busTrip,@required this.listener}) : super(key: key);
+  BusTripDisplay({Key key,@required this.busTrip,@required this.listener,@required this.userType}) : super(key: key);
 
   @override
   _BusTripDisplayState createState() => _BusTripDisplayState();
@@ -15,12 +18,38 @@ class BusTripDisplay extends StatefulWidget {
 
 class _BusTripDisplayState extends State<BusTripDisplay> {
   double _width = 0.0;
-  int _availableSeat = 0;
+  int _availableSeat = 0; 
+  bool _isActiveTrip = false;
+  String _buttonText = "";
 
   @override
   void initState() { 
     super.initState();
     _setAvailableSeat();
+    _checkActiveVisit();
+  }
+  _checkActiveVisit(){
+    if(widget.busTrip.startTime.isAfter(DateTime.now()) && widget.busTrip.endTime.isBefore(DateTime.now()) ){
+      setState(() {
+        _isActiveTrip = true;
+      });
+      if(widget.userType == UserType.Passenger){
+        setState(() {
+          _buttonText = "Check bus location";
+        });
+      }
+      else if(widget.userType == UserType.BusOwner && widget.busTrip.currentLocation == null){
+        setState(() {
+          _buttonText = "Start Trip";
+        });
+      }
+      else if(widget.userType == UserType.BusOwner && widget.busTrip.currentLocation != null){
+        setState(() {
+          _buttonText = "";
+          _isActiveTrip = false;
+        });
+      }
+    }
   }
   
   _setAvailableSeat(){
@@ -336,6 +365,17 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                   ),
                 ),
 
+                _isActiveTrip?Padding(
+                  padding: const EdgeInsets.only(top:20.0),
+                  child: CustomButton(
+                    text: _isActiveTrip? "StartTrip":"Check Bus Location", 
+                    shadow: false,
+                    buttonClick: (){
+
+                    }
+                  ),
+                ):Container()
+
 
               ],
             ),
@@ -348,4 +388,5 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
 
 abstract class BusTripDisplayListener{
   busTripClick(Trip busTrip);
+  locationGetOrSet(Trip busTrip);
 }

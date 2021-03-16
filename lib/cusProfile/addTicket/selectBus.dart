@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
+import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/busTripDisplay.dart';
 
 import '../../const.dart';
@@ -27,7 +28,7 @@ class _SelectBusState extends State<SelectBus> implements BusTripDisplayListener
     _tripList = await Database().searchTrip(widget.selectedDeparture, widget.selectedArrive, widget.selectedDate);
     for (var item in _tripList) {
       _tripWidgetList.add(
-        BusTripDisplay(busTrip: item, listener: this)
+        BusTripDisplay(busTrip: item, listener: this,userType: UserType.Passenger,)
       );
     }
     if(mounted){
@@ -63,5 +64,11 @@ class _SelectBusState extends State<SelectBus> implements BusTripDisplayListener
   @override
   busTripClick(Trip busTrip) {
     widget.nextPage(busTrip);
+  }
+
+  @override
+  locationGetOrSet(Trip busTrip) {
+    // TODO: implement locationGetOrSet
+    throw UnimplementedError();
   }
 }

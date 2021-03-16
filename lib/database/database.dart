@@ -119,8 +119,8 @@ class Database{
     }
     await trips.document(trip.id).setData({
       "busOwnerEmail":trip.busOwnerEmail,
-      "startTime":trip.startTime,
-      "endTime":trip.endTime,
+      "startTime":DateTime(trip.travelDate.year,trip.travelDate.month,trip.travelDate.day,trip.startTime.hour,trip.startTime.minute),
+      "endTime":DateTime(trip.travelDate.year,trip.travelDate.month,trip.travelDate.day, trip.endTime.hour, trip.endTime.minute),
       "travelDate":trip.travelDate,
       "startLocation":trip.startLocation,
       "endLocation":trip.endLocation,

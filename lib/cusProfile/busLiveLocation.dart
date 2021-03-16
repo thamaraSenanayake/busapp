@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
@@ -16,65 +17,29 @@ import 'package:quickbussl/module/locationError.dart';
 import 'package:quickbussl/module/topBar.dart';
 import 'dart:ui' as ui;
 
-class DisplayPassengers extends StatefulWidget {
+import 'package:quickbussl/res/typeConvert.dart';
+
+class BusLocation extends StatefulWidget {
   final Trip trip;
-  DisplayPassengers({Key key, this.trip}) : super(key: key);
+  BusLocation({Key key, this.trip}) : super(key: key);
 
   @override
-  _DisplayPassengersState createState() => _DisplayPassengersState();
+  _BusLocationState createState() => _BusLocationState();
 }
 
-class _DisplayPassengersState extends State<DisplayPassengers> implements LocationErrorListener{
+class _BusLocationState extends State<BusLocation> {
   // CameraPosition  cameraPosition;
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   GoogleMapController mapController;
   String _mapStyle;
-  Position _position;
+  LatLng _position;
   PolylinePoints polylinePoints;
   List<LatLng> polylineCoordinates = [];
   Map<PolylineId, Polyline> polylines = {};
   bool _displayBottomBar = false;
-  Seat _clickedSeat;
   
   double _width= 0;
 
-  _getCurrentPosition() async {
-    print("get location");
-    try{
-      _position = await getCurrentPosition(desiredAccuracy:LocationAccuracy.best);
-    }
-    catch (e){
-    }
-    if(_position != null){
-      _addMark(LatLng(_position.latitude, _position.longitude));
-    }
-    _loadUser();  
-  }
-
-  _loadUser() async {
-    
-    final Uint8List markerIcon = await getBytesFromAsset('assets/user.png', 150);
-
-    for (var item in widget.trip.seatList) {
-      if(item.status == 1){
-        var marker = Marker(
-          onTap: (){
-            setState(() {
-              _clickedSeat = item;
-              _displayBottomBar = true;
-            });
-          },
-          markerId: MarkerId(item.number.toString()),
-          position: LatLng(item.getInLocation.latitude,item.getInLocation.longitude),
-          icon: BitmapDescriptor.fromBytes(markerIcon),
-        );
-        markers[MarkerId(item.number.toString())] = marker;
-      }
-    }
-    setState(() {
-      
-    });
-  }
 
   _addMark(LatLng position) async {
     final Uint8List markerIcon = await getBytesFromAsset('assets/bus.png', 100);
@@ -126,44 +91,30 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
     polylines[id] = polyline;
   }
   
-  _setLiveLocation(){
-    if(widget.trip.startTime.isAfter(DateTime.now()) && widget.trip.endTime.isBefore(DateTime.now()) ){
-      _locationListener();
-    }
-  }
   
-  _locationListener() async {
-    Position _newPosition;
-    try{
-      _newPosition = await getCurrentPosition(desiredAccuracy:LocationAccuracy.best);
-    }
-    catch (e){
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, _, __) => LocationError(
-            listener: this,
-          ),
-          opaque: false
-        ),
-      );
-      return;
-    }
-    if(_newPosition != null && _newPosition != _position){
-      _position = _newPosition;
-      _addMark(LatLng(_newPosition.latitude, _newPosition.longitude));
-      Database().setLiveLocation(LatLng(_newPosition.latitude, _newPosition.longitude), widget.trip.id);
-    }
+  
+  _getLiveLocation(){
+    CollectionReference tripList = Database().trips;
+     tripList
+    .document('id')
+    .snapshots().listen((querySnapshot) {
+      if(querySnapshot["currentLocation"] != null){
+        _position = TypeConvert().stringToLatLng(querySnapshot["currentLocation"]);
+        _addMark(_position);
+      }
+
+    });
   }
+ 
 
   @override
   void initState() {
     super.initState();
-    _getCurrentPosition();
     rootBundle.loadString('assets/map_style.txt').then((string) {
       _mapStyle = string;
     });
     _createPolylines( widget.trip.startPosition,  widget.trip.endPosition);
-    _setLiveLocation();
+    _getLiveLocation();
   }
   
   @override
@@ -206,13 +157,7 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
                     ),
                   ),
 
-                  _displayBottomBar?Padding(
-                    padding: const EdgeInsets.only(bottom:30.0),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: MapInfoView(seat: _clickedSeat)
-                    ),
-                  ):Container()
+                  
                 ],
               ) 
             )
@@ -264,9 +209,5 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
     return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
   }
 
-  @override
-  click(bool option) async {
-     await new Future.delayed(const Duration(seconds : 3));
-    _locationListener();
-  }
+  
 }

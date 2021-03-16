@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -15,8 +16,10 @@ import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/customDatePicker.dart';
 import 'package:quickbussl/module/customTimePicker.dart';
+import 'package:quickbussl/module/getLocation.dart';
 import 'package:quickbussl/module/textbox.dart';
-
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
 import '../const.dart';
 
 class AddTrip extends StatefulWidget {
@@ -33,6 +36,8 @@ class _AddTripState extends State<AddTrip> {
   int _duration;
   double _width = 0.0;
   Trip _trip = Trip();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+
 
   String _startTimeError = '';
   String _endTimeError = '';
@@ -77,6 +82,28 @@ class _AddTripState extends State<AddTrip> {
 
       await Database().addTrip(_trip);
       widget.listener.moveToPage(BusOwnerPages.OnGoing);
+
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+      AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: Importance.max,
+        priority: Priority.high,
+        showWhen: false
+      );
+
+      const IOSNotificationDetails notificationDetails = IOSNotificationDetails(badgeNumber: 1);
+      const NotificationDetails platformChannelSpecifics = NotificationDetails(android: androidPlatformChannelSpecifics,iOS: notificationDetails);
+      DateTime notificationTime = _trip.startTime.subtract(Duration(minutes: 15));
+      await flutterLocalNotificationsPlugin.zonedSchedule(
+        0,
+        'Reminder',
+        'You have a trip to ${_trip.startLocation} at ${DateFormat.jm().format(_trip.startTime)} ',
+        tz.TZDateTime.local(notificationTime.year,notificationTime.month,notificationTime.day,notificationTime.hour,notificationTime.minute,notificationTime.second),
+        platformChannelSpecifics,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:UILocalNotificationDateInterpretation.absoluteTime,
+        payload: 'item x'
+      );
 
     }
   }
@@ -210,34 +237,15 @@ class _AddTripState extends State<AddTrip> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: (){
-                  _handlePressButton('start');
-                },
-                child: Container(
-                  width: _width - 40,
-                  height: 50,
-                  padding:EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 15
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppData.whiteColor,
-                    border: Border.all(
-                      color: AppData.primaryColor2,
-                      width: 1
-                    ),
-                  ),
-                  child: Text(
-                    _trip.startLocation,
-                    style:TextStyle(
-                      color: AppData.blackColor, 
-                      fontSize:15,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                ),
+              GetLocation(
+                setLocation: (detail,latLng){
+                  setState(() {
+                    _trip.startPosition = latLng;
+                    _trip.startLocation = detail;
+                    _startLocationError = "";
+                  });
+                }, 
+                initLocation: null
               ),
               Padding(
                 padding: const EdgeInsets.only(top:10.0,bottom: 5),
@@ -268,34 +276,15 @@ class _AddTripState extends State<AddTrip> {
                   ),
                 ),
               ),
-              GestureDetector(
-                onTap: (){
-                  _handlePressButton('end');
-                },
-                child: Container(
-                  width: _width - 40,
-                  height: 50,
-                  padding:EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 15
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppData.whiteColor,
-                    border: Border.all(
-                      color: AppData.primaryColor2,
-                      width: 1
-                    ),
-                  ),
-                  child: Text(
-                    _trip.endLocation,
-                    style:TextStyle(
-                      color: AppData.blackColor, 
-                      fontSize:15,
-                      fontWeight: FontWeight.w500
-                    ),
-                  ),
-                ),
+              GetLocation(
+                setLocation: (detail,latLng){
+                  setState(() {
+                    _trip.endPosition = latLng;
+                    _trip.endLocation = detail;
+                    _endLocationError = "";
+                  });
+                }, 
+                initLocation: null
               ),
               Padding(
                 padding: const EdgeInsets.only(top:10.0,bottom: 5),
