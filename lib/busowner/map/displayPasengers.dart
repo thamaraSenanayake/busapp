@@ -127,7 +127,7 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
   }
   
   _setLiveLocation(){
-    if(widget.trip.startTime.isAfter(DateTime.now()) && widget.trip.endTime.isBefore(DateTime.now()) ){
+    if(widget.trip.startTime.isBefore(DateTime.now()) && widget.trip.endTime.isAfter(DateTime.now()) ){
       _locationListener();
     }
   }

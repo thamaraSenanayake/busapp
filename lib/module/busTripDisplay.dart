@@ -18,6 +18,7 @@ class BusTripDisplay extends StatefulWidget {
 
 class _BusTripDisplayState extends State<BusTripDisplay> {
   double _width = 0.0;
+  double _income = 0.0;
   int _availableSeat = 0; 
   bool _isActiveTrip = false;
   String _buttonText = "";
@@ -26,10 +27,18 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
   void initState() { 
     super.initState();
     _setAvailableSeat();
-    _checkActiveVisit();
+    _checkActiveVisit();    
+    _totalIncome();
+  }
+  _totalIncome(){
+    for (var item in widget.busTrip.seatList) {
+      if(item.status == 1 && item.ticketPrice != null){
+        _income += item.ticketPrice;
+      }
+    }
   }
   _checkActiveVisit(){
-    if(widget.busTrip.startTime.isAfter(DateTime.now()) && widget.busTrip.endTime.isBefore(DateTime.now()) ){
+    if(widget.busTrip.startTime.isBefore(DateTime.now()) && widget.busTrip.endTime.isAfter(DateTime.now()) ){
       setState(() {
         _isActiveTrip = true;
       });
@@ -355,11 +364,12 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                   width: _width -40,
                   child: Center(
                     child: Text(
-                      "2 X 1 Seats Luxury A/C Bus",
+                      widget.userType == UserType.Passenger? "Total distance: ${(widget.busTrip.totalDistance/1000).toStringAsFixed(2)} Km\nFull ticket Price Rs.${widget.busTrip.totalPrice.toStringAsFixed(0)}/=":
+                      "Total income from trip: Rs "+ _income.toStringAsFixed(2),
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
-                        fontWeight: FontWeight.w600
+                        fontWeight: FontWeight.w500
                       ),
                     ),
                   ),

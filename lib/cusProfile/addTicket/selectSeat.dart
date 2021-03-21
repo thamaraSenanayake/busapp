@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:quickbussl/const.dart';
 import 'package:quickbussl/cusProfile/addTicket/addDetails.dart';
 import 'package:quickbussl/model/seat.dart';
@@ -24,6 +25,7 @@ class _SelectSeatState extends State<SelectSeat> {
   List<Seat> seatCount;
   Widget _seats;
   String _error = '';
+
 
   _smallBus(){
     _rowHeight = (_height-252)/10;
@@ -316,17 +318,20 @@ class _SelectSeatState extends State<SelectSeat> {
   void initState() {
     super.initState();
     print(widget.trip);
+   
     seatCount = widget.trip.seatList;
     WidgetsBinding.instance.addPostFrameCallback((_) { 
       _smallBus();
     });
   }
 
-  _done(){
+  _done() async {
     int selectSeatCount = 0;
+    double _total = 0;
     for (var item in seatCount) {
       if(item.status == 4){
         selectSeatCount++;
+        _total+= item.ticketPrice;
       }
     }
     if(selectSeatCount == 0){
@@ -334,6 +339,33 @@ class _SelectSeatState extends State<SelectSeat> {
         _error= "Select at least one seat";
       });
     }else{
+      final String tokenizationKey = 'sandbox_8hxpnkht_kzdtzv2btm4p7s5j';
+
+      // final request = BraintreeCreditCardRequest(
+      //   cardNumber: '4111111111111111',
+      //   expirationMonth: '12',
+      //   expirationYear: '2021',
+      // );
+      // BraintreePaymentMethodNonce result = await Braintree.tokenizeCreditCard(
+      //   'AblRpnan_5l0f6haR_0rBbn-f6rsDcejl3cwz14-rHz5atdhYoj4gyjEaujbvionPdy1apYo4vU1HHpz',
+      //   request,
+      // );
+      final request1 = BraintreeDropInRequest(
+        tokenizationKey:'tokenizationKey',
+        // clientToken: 'AblRpnan_5l0f6haR_0rBbn-f6rsDcejl3cwz14-rHz5atdhYoj4gyjEaujbvionPdy1apYo4vU1HHpz',
+        collectDeviceData: true,
+        googlePaymentRequest: BraintreeGooglePaymentRequest(
+          totalPrice: _total.toString(),
+          currencyCode: 'LKR',
+          billingAddressRequired: false,
+        ),
+        paypalRequest: BraintreePayPalRequest(
+          amount: _total.toString(),
+          displayName: 'Example company',
+        ),
+      );
+      BraintreeDropInResult result1 = await BraintreeDropIn.start(request1);
+
       widget.nextPage(seatCount);
     }
   }

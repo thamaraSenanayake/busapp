@@ -45,6 +45,9 @@ dependencies:
   # workmanager: ^0.2.3
   flutter_local_notifications: ^4.0.1+2
   timezone: ^0.6.1
+  flutter_braintree: ^1.1.0+1
+
+
 
 
 

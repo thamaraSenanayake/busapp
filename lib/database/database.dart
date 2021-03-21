@@ -90,6 +90,7 @@ class Database{
           "getOutLocation":item.getOutLocation != null? TypeConvert().latLngToString(item.getOutLocation):"",
           "getInPlace":item.getInPlace,
           "getOutPlace":item.getOutPlace,
+          "ticketPrice" :item.ticketPrice
         }
       );
     }
@@ -201,7 +202,7 @@ class Database{
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('busOwnerEmail',isEqualTo: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:timestamp)
+    .where('endTime',isGreaterThanOrEqualTo:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -212,7 +213,7 @@ class Database{
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('busOwnerEmail',isEqualTo: userEmail)
-    .where('travelDate',isLessThan:timestamp)
+    .where('endTime',isLessThan:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -259,7 +260,7 @@ class Database{
         ..endLocation = item['endLocation']
         ..startPosition =TypeConvert().stringToLatLng(item["startPosition"]) 
         ..endPosition = TypeConvert().stringToLatLng(item["endPosition"])  
-        ..currentLocation = item['currentLocation']
+        ..currentLocation = item['currentLocation']!= null? TypeConvert().stringToLatLng(item['currentLocation']):null
         ..busType =TypeConvert().stringToBusType(item['busType'])
         ..seatList = seatList
         ..userList = item['userList'].cast<String>()

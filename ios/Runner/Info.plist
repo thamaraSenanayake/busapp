@@ -49,5 +49,18 @@
 	<string>$(PRODUCT_NAME) needs photo library access to upload product images</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) needs camera access to take product photos</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.your-company.your-app.braintree</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.your-company.your-app.braintree</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

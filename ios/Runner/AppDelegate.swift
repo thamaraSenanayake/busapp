@@ -1,6 +1,8 @@
 import UIKit
 import Flutter
 import GoogleMaps
+import Braintree
+
 
 
 @UIApplicationMain
@@ -11,9 +13,19 @@ import GoogleMaps
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
     GMSServices.provideAPIKey("AIzaSyCHKdl_iQNomnmj7Lm8x3WYBbQPeqRBNLo")
+    BTAppSwitch.setReturnURLScheme("sb-vomui5462223@business.example.com")
+
     if #available(iOS 10.0, *) {
       UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
     }
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+      if url.scheme == "sb-vomui5462223@business.example.com" {
+          return BTAppSwitch.handleOpen(url, options:options)
+      }
+      
+      return false
   }
 }

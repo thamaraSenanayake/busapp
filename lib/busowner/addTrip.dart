@@ -81,8 +81,11 @@ class _AddTripState extends State<AddTrip> {
       }
 
       await Database().addTrip(_trip);
+
       widget.listener.moveToPage(BusOwnerPages.OnGoing);
 
+      tz.initializeTimeZones();
+      tz.setLocalLocation(tz.getLocation("Asia/Colombo")); 
       const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
         'your channel id', 'your channel name', 'your channel description',

@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:quickbussl/appBarWindows/aboutUs.dart';
+import 'package:quickbussl/appBarWindows/editDetails.dart';
+import 'package:quickbussl/appBarWindows/passwordChange.dart';
 import 'package:quickbussl/busowner/TripHistory.dart';
 import 'package:quickbussl/busowner/addTrip.dart';
 import 'package:quickbussl/busowner/onGoing.dart';
-import 'package:quickbussl/cusProfile/addTicket/addTicket.dart';
-import 'package:quickbussl/cusProfile/bookedHistory.dart';
-import 'package:quickbussl/cusProfile/bookedTrip.dart';
 import 'package:quickbussl/login/loginbase.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
@@ -315,6 +315,14 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => EditUserDetails(
+                      user: widget.user,
+                    ),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -328,6 +336,14 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => UpdatePassword(
+                      user: widget.user,
+                    ),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -341,6 +357,12 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => AboutUs(),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
@@ -354,6 +376,12 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
               ),
               onTap:() {
                 _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => AboutUs(),
+                    opaque: false
+                  ),
+                );
               },
             ),
             ListTile(
