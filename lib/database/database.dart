@@ -181,7 +181,7 @@ class Database{
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('userList',arrayContains: userEmail)
-    .where('travelDate',isGreaterThanOrEqualTo:timestamp)
+    .where('endTime',isGreaterThanOrEqualTo:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);
@@ -192,7 +192,7 @@ class Database{
     final timestamp = Timestamp.fromMillisecondsSinceEpoch(DateTime.now().millisecondsSinceEpoch);
     querySnapshot = await trips
     .where('userList',arrayContains: userEmail)
-    .where('travelDate',isLessThan:timestamp)
+    .where('endTime',isLessThan:timestamp)
     .getDocuments();
 
     return _setTrip(querySnapshot);

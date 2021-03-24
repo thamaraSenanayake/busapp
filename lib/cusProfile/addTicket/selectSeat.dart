@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_braintree/flutter_braintree.dart';
+// import 'package:flutter_braintree/flutter_braintree.dart';
 import 'package:quickbussl/const.dart';
 import 'package:quickbussl/cusProfile/addTicket/addDetails.dart';
 import 'package:quickbussl/model/seat.dart';
@@ -350,21 +350,21 @@ class _SelectSeatState extends State<SelectSeat> {
       //   'AblRpnan_5l0f6haR_0rBbn-f6rsDcejl3cwz14-rHz5atdhYoj4gyjEaujbvionPdy1apYo4vU1HHpz',
       //   request,
       // );
-      final request1 = BraintreeDropInRequest(
-        tokenizationKey:'tokenizationKey',
-        // clientToken: 'AblRpnan_5l0f6haR_0rBbn-f6rsDcejl3cwz14-rHz5atdhYoj4gyjEaujbvionPdy1apYo4vU1HHpz',
-        collectDeviceData: true,
-        googlePaymentRequest: BraintreeGooglePaymentRequest(
-          totalPrice: _total.toString(),
-          currencyCode: 'LKR',
-          billingAddressRequired: false,
-        ),
-        paypalRequest: BraintreePayPalRequest(
-          amount: _total.toString(),
-          displayName: 'Example company',
-        ),
-      );
-      BraintreeDropInResult result1 = await BraintreeDropIn.start(request1);
+      // final request1 = BraintreeDropInRequest(
+      //   tokenizationKey:'tokenizationKey',
+      //   // clientToken: 'AblRpnan_5l0f6haR_0rBbn-f6rsDcejl3cwz14-rHz5atdhYoj4gyjEaujbvionPdy1apYo4vU1HHpz',
+      //   collectDeviceData: true,
+      //   googlePaymentRequest: BraintreeGooglePaymentRequest(
+      //     totalPrice: _total.toString(),
+      //     currencyCode: 'LKR',
+      //     billingAddressRequired: false,
+      //   ),
+      //   paypalRequest: BraintreePayPalRequest(
+      //     amount: _total.toString(),
+      //     displayName: 'Example company',
+      //   ),
+      // );
+      // BraintreeDropInResult result1 = await BraintreeDropIn.start(request1);
 
       widget.nextPage(seatCount);
     }

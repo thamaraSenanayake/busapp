@@ -28,7 +28,7 @@ class _LoginBaseState extends State<LoginBase> {
 
   _initLocalNotification() async {
 
-    const AndroidInitializationSettings initializationSettingsAndroid =AndroidInitializationSettings('app_icon');
+    const AndroidInitializationSettings initializationSettingsAndroid =AndroidInitializationSettings('@mipmap/ic_launcher');
     FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   
     final IOSInitializationSettings initializationSettingsIOS =

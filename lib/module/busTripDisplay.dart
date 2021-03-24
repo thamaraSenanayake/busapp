@@ -22,6 +22,8 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
   int _availableSeat = 0; 
   bool _isActiveTrip = false;
   String _buttonText = "";
+  String _totalDistance = "";
+  String _ticketPrice = "";
 
   @override
   void initState() { 
@@ -29,6 +31,16 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
     _setAvailableSeat();
     _checkActiveVisit();    
     _totalIncome();
+    if(widget.busTrip.totalDistance != null){
+      _totalDistance = (widget.busTrip.totalDistance/1000).toStringAsFixed(2);
+    }else{
+      _totalDistance = "0";
+    }
+    if(widget.busTrip.totalPrice != null){
+      _ticketPrice = (widget.busTrip.totalPrice).toStringAsFixed(2);
+    }else{
+      _ticketPrice = "0";
+    }
   }
   _totalIncome(){
     for (var item in widget.busTrip.seatList) {
@@ -364,11 +376,12 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                   width: _width -40,
                   child: Center(
                     child: Text(
-                      widget.userType == UserType.Passenger? "Total distance: ${(widget.busTrip.totalDistance/1000).toStringAsFixed(2)} Km\nFull ticket Price Rs.${widget.busTrip.totalPrice.toStringAsFixed(0)}/=":
+                      widget.userType == UserType.Passenger? "Total distance:Km $_totalDistance \n Full Ticket price:Rs $_ticketPrice/=":
                       "Total income from trip: Rs "+ _income.toStringAsFixed(2),
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
+                        height: 1.5,
                         fontWeight: FontWeight.w500
                       ),
                     ),
@@ -378,10 +391,10 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                 _isActiveTrip?Padding(
                   padding: const EdgeInsets.only(top:20.0),
                   child: CustomButton(
-                    text: _isActiveTrip? "StartTrip":"Check Bus Location", 
+                    text: widget.userType == UserType.BusOwner? "Start Trip":"Check Bus Location", 
                     shadow: false,
                     buttonClick: (){
-
+                      widget.listener.busTripClick(widget.busTrip);
                     }
                   ),
                 ):Container()

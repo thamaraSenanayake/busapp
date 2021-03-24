@@ -137,11 +137,14 @@ class _SplashScreenState extends State<SplashScreen> {
                           height: 20,
                         ),
 
-                        CustomButton(
-                          text: "Bus Owner", 
-                          buttonClick: (){
-                            widget.goToPage(LoginPageList.BusLogin);
-                          }
+                        Padding(
+                          padding: const EdgeInsets.only(bottom:10.0),
+                          child: CustomButton(
+                            text: "Bus Owner", 
+                            buttonClick: (){
+                              widget.goToPage(LoginPageList.BusLogin);
+                            }
+                          ),
                         ),
 
                         

@@ -89,6 +89,9 @@ class _BusLocationState extends State<BusLocation> {
 
     // Adding the polyline to the map
     polylines[id] = polyline;
+    setState(() {
+      
+    });
   }
   
   
@@ -96,7 +99,7 @@ class _BusLocationState extends State<BusLocation> {
   _getLiveLocation(){
     CollectionReference tripList = Database().trips;
      tripList
-    .document('id')
+    .document(widget.trip.id)
     .snapshots().listen((querySnapshot) {
       if(querySnapshot["currentLocation"] != null){
         _position = TypeConvert().stringToLatLng(querySnapshot["currentLocation"]);

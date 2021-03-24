@@ -124,6 +124,9 @@ class _DisplayPassengersState extends State<DisplayPassengers> implements Locati
 
     // Adding the polyline to the map
     polylines[id] = polyline;
+    setState(() {
+      
+    });
   }
   
   _setLiveLocation(){

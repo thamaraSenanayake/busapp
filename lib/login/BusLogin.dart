@@ -252,7 +252,7 @@ class _BusLoginState extends State<BusLogin> {
                         }
                       ),
                       SizedBox(
-                        height: 20,
+                        height: 10,
                       ),
                     ],
                   )

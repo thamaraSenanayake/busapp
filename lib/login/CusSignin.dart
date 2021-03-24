@@ -427,15 +427,18 @@ class _CusSigningState extends State<CusSigning> {
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Text(
-                      "Sign In",
-                      style: TextStyle(
-                        color: AppData.primaryColor,
-                        fontSize: 35,
-                        fontWeight: FontWeight.w700,
-                        // backgroundColor: Colors.white
+                  Padding(
+                    padding: const EdgeInsets.only(bottom:10.0),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Sign In",
+                        style: TextStyle(
+                          color: AppData.primaryColor,
+                          fontSize: 35,
+                          fontWeight: FontWeight.w700,
+                          // backgroundColor: Colors.white
+                        ),
                       ),
                     ),
                   ),

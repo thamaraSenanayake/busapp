@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:quickbussl/cusProfile/busLiveLocation.dart';
 import 'package:quickbussl/cusProfile/profileBase.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
@@ -80,8 +81,14 @@ class _BookedTripState extends State<BookedTrip> implements BusTripDisplayListen
 
   @override
   busTripClick(Trip busTrip) {
-    // TODO: implement busTripClick
-    throw UnimplementedError();
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, _, __) => BusLocation(
+          trip: busTrip,
+        ),
+        opaque: false
+      ),
+    );
   }
 
   @override

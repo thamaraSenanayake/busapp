@@ -262,7 +262,10 @@ class _CusLoginState extends State<CusLogin> {
                         buttonClick: (){
                           widget.goToPage(LoginPageList.CusSignin);
                         }
-                      )
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
                     ],
                   ),
                 ],
