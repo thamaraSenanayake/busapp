@@ -4,6 +4,7 @@ import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/busTripDisplay.dart';
+import 'package:quickbussl/module/emptyView.dart';
 
 import '../../const.dart';
 
@@ -56,7 +57,7 @@ class _SelectBusState extends State<SelectBus> implements BusTripDisplayListener
             size: 50.0,
           ),
         ),
-      ):Column(
+      ):_tripWidgetList.length == 0?EmptyView(msg: "Not added any bus trips to your selected date, add a new date and try "):Column(
       children: _tripWidgetList,
     );
   }

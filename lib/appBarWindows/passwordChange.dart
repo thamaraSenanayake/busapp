@@ -21,6 +21,7 @@ class _UpdatePasswordState extends State<UpdatePassword> {
   String _currentPasswordError= "";
   String _newPasswordError= "";
   String _confirmPasswordError= "";
+  String _regexValidationError= "";
   String _currentPassword= "";
   String _newPassword= "";
   String _confirmPassword= "";
@@ -31,14 +32,20 @@ class _UpdatePasswordState extends State<UpdatePassword> {
     _user = widget.user;
   }
 
-  _done(){
+  _done() async {
     FocusScope.of(context).unfocus();
-
+     RegExp _regExp = RegExp(
+      r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+      caseSensitive: false,
+      multiLine: false,
+    );
     bool _validation = true;
+    final storage = new FlutterSecureStorage();
+    String _password = await storage.read(key: KeyContainer.PASSWORD);
     
-    if(_user.password != _currentPassword){
+    if(_password != _currentPassword){
       setState(() {
-        _currentPasswordError = "Current password is invalid";
+        _currentPasswordError = "invalid password";
         _validation = false;
       });
     }
@@ -47,12 +54,16 @@ class _UpdatePasswordState extends State<UpdatePassword> {
         _confirmPasswordError = "Password not matching";
         _validation = false;
       });
+    }else if (!_regExp.hasMatch(_newPassword)){
+      setState(() {
+        _regexValidationError = "Password must contain Minimum eight characters and at least one letter and one number";
+        _validation = false;
+      });
     }
     
 
     if(_validation){
       _user.password = _newPassword;
-      final storage = new FlutterSecureStorage();
       storage.write(key: KeyContainer.PASSWORD,value: _user.password);
       Database().changePassword(_user);
       Navigator.pop(context);
@@ -153,13 +164,13 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               textBoxKey: null, 
               shadowDisplay: false,
               onChange: (val){
-                _user.phone = val;
+                _newPassword= val;
                 setState(() {
                   _newPasswordError = "";
                 });
               }, 
               errorText: _newPasswordError,
-            textInputType:TextInputType.phone,
+            // textInputType:TextInputType.phone,
 
             ),
             Padding(
@@ -197,18 +208,28 @@ class _UpdatePasswordState extends State<UpdatePassword> {
               textBoxKey: null, 
               shadowDisplay: false,
               onChange: (val){
-                _confirmPasswordError = val;
+                _confirmPassword = val;
                 setState(() {
                   _confirmPasswordError = "";
                 });
               }, 
               errorText: _confirmPasswordError,
-              // textInputType:TextInputType.text,
-
             ),
 
             SizedBox(
-              height: 50,
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+              child: Text(
+                _regexValidationError,
+                style: TextStyle(
+                  color: AppData.primaryColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  backgroundColor: Colors.white
+                ),
+              ),
             ),
 
             CustomButton(

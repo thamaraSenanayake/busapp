@@ -43,6 +43,11 @@ class _EditUserDetailsState extends State<EditUserDetails> {
         _phoneError = "Required field";
         _validation = false;
       });
+    }else if(_user.phone.length != 10) {
+      setState(() {
+        _phoneError = "invalid phone number";
+        _validation = false;
+      });
     }
     if(_user.idNum != null && _user.idNum.isEmpty){
       setState(() {

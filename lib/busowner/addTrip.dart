@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
@@ -39,12 +38,12 @@ class _AddTripState extends State<AddTrip> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
 
-  String _startTimeError = '';
   String _endTimeError = '';
   String _travelDateError = '';
   String _startLocationError = '';
   String _endLocationError = '';
   String _ticketPriceError = '';
+  String _timeError = '';
   TextEditingController _timeEstimate = TextEditingController();
 
   
@@ -68,6 +67,12 @@ class _AddTripState extends State<AddTrip> {
     if(_trip.totalPrice == 0){
       setState(() {
         _ticketPriceError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_trip.startTime.difference(DateTime.now()).inSeconds<1){
+      setState(() {
+        _timeError = "Time cant be from past";
       });
       _validation = false;
     }
@@ -123,67 +128,19 @@ class _AddTripState extends State<AddTrip> {
     
   }
 
-  _updateTime() async {
-    if(_duration != null){
+  // _updateTime() async {
+  //   if(_duration != null){
 
-      _trip.endTime = _trip.startTime.add(Duration(seconds:_duration));
+  //     _trip.endTime = _trip.startTime.add(Duration(seconds:_duration));
       
-      _timeEstimate.text = DateFormat.jm().format(_trip.endTime);
-    }
+  //     _timeEstimate.text = DateFormat.jm().format(_trip.endTime);
+  //   }
     
-  }
+  // }
 
-  Future<void> _handlePressButton(String locationTyp) async {
-    // show input autocomplete with selected mode
-    // then get the Prediction selected
-    Prediction p = await PlacesAutocomplete.show(
-      context: context,
-      apiKey: AppData.kGoogleApiKey,
-      onError: onError,
-      mode: Mode.overlay,
-      language: "en",
-      components: [Component(Component.country, "lk")],
-      logo: Container(height:0,width:0)
-    );
+  
 
-    displayPrediction(p,locationTyp);
-  }
-
-   void onError(PlacesAutocompleteResponse response) {
-    print(response.errorMessage);
-  }
-
-  Future<Null> displayPrediction(Prediction p,String locationType) async {
-  if (p != null) {
-    // get detail (lat/lng)
-    GoogleMapsPlaces _places = GoogleMapsPlaces(
-      apiKey: AppData.kGoogleApiKey,
-      apiHeaders: await GoogleApiHeaders().getHeaders(),
-    );
-    PlacesDetailsResponse detail = await _places.getDetailsByPlaceId(p.placeId);
-    final lat = detail.result.geometry.location.lat;
-    final lng = detail.result.geometry.location.lng;
-    if(locationType == 'start'){
-      setState(() {
-        _trip.startPosition = LatLng(lat, lng);
-        _trip.startLocation = detail.result.name;
-        _startLocationError = "";
-      });
-    }else{
-      setState(() {
-        _trip.endPosition = LatLng(lat, lng);
-        _trip.endLocation = detail.result.name;
-        _endLocationError = "";
-      });
-    }
-    _setEndTime();
-    print(lat);
-    print(lng);
-    // scaffold.showSnackBar(
-    //   SnackBar(content: Text("${p.description} - $lat/$lng")),
-    // );
-  }
-}
+  
 
   @override
   void initState() { 
@@ -247,6 +204,7 @@ class _AddTripState extends State<AddTrip> {
                     _trip.startLocation = detail;
                     _startLocationError = "";
                   });
+                  _setEndTime();
                 }, 
                 initLocation: null
               ),
@@ -286,6 +244,7 @@ class _AddTripState extends State<AddTrip> {
                     _trip.endLocation = detail;
                     _endLocationError = "";
                   });
+                  _setEndTime();
                 }, 
                 initLocation: null
               ),
@@ -322,7 +281,11 @@ class _AddTripState extends State<AddTrip> {
                 initDate: DateTime.now(), 
                 onChange: (val){
                   _trip.travelDate = val;
-                  _updateTime();
+                  _trip.startTime =DateTime(_trip.travelDate.year,_trip.travelDate.month,_trip.travelDate.day, val.hour, val.minute);
+                  setState(() {
+                    _timeError ="";
+                  });
+                  
                 }, 
                 title: "Date:"
               ),
@@ -343,7 +306,7 @@ class _AddTripState extends State<AddTrip> {
                         ),
                       ),
                       Text(
-                        _startTimeError,
+                        _timeError,
                         style: TextStyle(
                           color: AppData.primaryColor,
                           fontSize: 18,
@@ -360,6 +323,9 @@ class _AddTripState extends State<AddTrip> {
                 onChange: (val){
                   _trip.startTime =DateTime(_trip.travelDate.year,_trip.travelDate.month,_trip.travelDate.day, val.hour, val.minute);
                   _setEndTime();
+                  setState(() {
+                    _timeError ="";
+                  });
                 }, 
                 title: "Time"
               ),

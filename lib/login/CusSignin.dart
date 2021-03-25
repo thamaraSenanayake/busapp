@@ -31,37 +31,57 @@ class _CusSigningState extends State<CusSigning> {
   String _phoneError= "";
   String _idNumberError= "";
   String _passwordError= "";
+  String _passwordValidationError= "";
   String _confirmPasswordError= "";
 
   _signIn(){
     FocusScope.of(context).unfocus();
-
+    RegExp _emailValidation = new RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+      caseSensitive: false,
+      multiLine: false,
+    );
+    RegExp _passwordValidation = RegExp(
+      r"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$",
+      caseSensitive: false,
+      multiLine: false,
+    );
     bool _validation = true;
-    if(_user.email != null && _user.email.isEmpty){
+    if(_user.email == null || _user.email.isEmpty){
       setState(() {
         _emailError = "Required field";
         _validation = false;
       });
+    }else if(!_emailValidation.hasMatch(_user.email)){
+      setState(() {
+        _emailError = "Invalid email";
+        _validation = false;
+      });
     }
-    if(_user.name != null && _user.name.isEmpty){
+    if(_user.name == null || _user.name.isEmpty){
       setState(() {
         _nameError = "Required field";
         _validation = false;
       });
     }
-    if(_user.phone != null && _user.phone.isEmpty){
+    if(_user.phone == null || _user.phone.isEmpty){
       setState(() {
         _phoneError = "Required field";
         _validation = false;
       });
+    }else if(_user.phone.length != 10){
+      setState(() {
+        _phoneError = "10 digits Required";
+        _validation = false;
+      });
     }
-    if(_user.idNum != null && _user.idNum.isEmpty){
+    if(_user.idNum == null || _user.idNum.isEmpty){
       setState(() {
         _idNumberError = "Required field";
         _validation = false;
       });
     }
-    if(_user.password != null && _user.password.isEmpty){
+    if(_user.password == null || _user.password.isEmpty){
       setState(() {
         _passwordError = "Required field";
         _validation = false;
@@ -70,6 +90,17 @@ class _CusSigningState extends State<CusSigning> {
     if(_confirmPassword.isEmpty){
       setState(() {
         _confirmPasswordError = "Required field";
+        _validation = false;
+      });
+    }else if(_confirmPassword != _user.password ){
+      setState(() {
+        _passwordError = "password isn't matching";
+        _validation = false;
+      });
+    }
+    else if(!_passwordValidation.hasMatch(_user.password)){
+      setState(() {
+        _passwordValidationError = "Password must contain Minimum eight characters and at least one letter and one number";
         _validation = false;
       });
     }
@@ -391,6 +422,18 @@ class _CusSigningState extends State<CusSigning> {
                         ],
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+                      child: Text(
+                        _passwordValidationError,
+                        style: TextStyle(
+                          color: AppData.primaryColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          backgroundColor: Colors.white
+                        ),
+                      ),
+                    ),
                     CustomButton(
                       text: "Sign In", 
                       buttonClick: (){
@@ -427,6 +470,9 @@ class _CusSigningState extends State<CusSigning> {
                       ),
                     ),
                   ),
+
+                  
+
                   Padding(
                     padding: const EdgeInsets.only(bottom:10.0),
                     child: Align(
