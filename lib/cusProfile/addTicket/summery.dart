@@ -5,6 +5,7 @@ import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
+import 'package:stripe_payment/stripe_payment.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
@@ -24,19 +25,53 @@ class _SummeryState extends State<Summery> {
   double _width = 0.0;
   double _height =0.0;
   List<Widget> _rowList = [];
+  Token _paymentToken;
+  double _total = 0.0;
+
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
+  Future<bool> _payment() async {
+    StripePayment.setOptions(
+      StripeOptions(
+        // publishableKey: shop.stripeKey,
+        publishableKey: "pk_test_QY6kL328ODYZL3EXoUUSY2dZ",
+        androidPayMode: 'test', 
+        merchantId: "Test", 
+      ),
+    );
+    String currencyCode;
+    String countryCode;
+    countryCode = "LK";
+    currencyCode = "LKR";
 
-  _doThePayment() async {
-    tz.initializeTimeZones();
-    tz.setLocalLocation(tz.getLocation("Asia/Colombo")); 
-
-    List<String> userList = [];
-    userList = widget.trip.userList;
-    if(!userList.contains(widget.user.email)){
-      userList.add(widget.user.email);
+    try{
+      _paymentToken = await StripePayment.paymentRequestWithNativePay(
+        androidPayOptions: AndroidPayPaymentRequest(
+          totalPrice: _total.toString(),
+          currencyCode: currencyCode,
+        ),  
+        applePayOptions: ApplePayPaymentOptions(
+          countryCode: countryCode,
+          currencyCode: currencyCode,
+          items: [
+            ApplePayItem(
+              label: 'Test',
+              amount: _total.toString(),
+            )
+          ],
+        ),
+      );
     }
-    Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
+    catch(e){
+      print("error");
+      print(e);
+    }
+  }
+
+  _sendNotification() async {
+
+    tz.initializeTimeZones();
+    tz.setLocalLocation(tz.getLocation("Asia/Colombo"));
 
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
       AndroidNotificationDetails(
@@ -64,6 +99,21 @@ class _SummeryState extends State<Summery> {
       }
       
     }
+  }
+
+  _doThePayment() async {
+
+    await _payment(); 
+    await _sendNotification();
+
+    List<String> userList = [];
+    userList = widget.trip.userList;
+    if(!userList.contains(widget.user.email)){
+      userList.add(widget.user.email);
+    }
+    Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
+
+    
 
     widget.nextPage();
   }
@@ -72,6 +122,7 @@ class _SummeryState extends State<Summery> {
 
     for (var item in widget.trip.seatList) {
       if(item.status == 4){
+        _total += item.ticketPrice;
         _rowList.add(
           Padding(
             padding: const EdgeInsets.only(bottom:10.0),

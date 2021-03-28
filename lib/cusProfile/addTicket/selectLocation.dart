@@ -5,6 +5,7 @@ import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/customDatePicker.dart';
 import 'package:quickbussl/module/customDropDown.dart';
+import 'package:quickbussl/module/emptyView.dart';
 
 import '../../const.dart';
 class SelectLocation extends StatefulWidget {
@@ -51,7 +52,7 @@ class _SelectLocationState extends State<SelectLocation> {
       if(widget.selectedArrive != null && widget.selectedArrive.isNotEmpty){
         _selectedArrive = widget.selectedArrive;
       }else{
-        _selectedArrive = _arrive[0];
+        _selectedArrive = _arrive[1];
       }
     }
 
@@ -87,6 +88,8 @@ class _SelectLocationState extends State<SelectLocation> {
           ),
         ),
       ):
+      _departure.length == 0?
+      EmptyView(msg: "Waiting for bus owner to add trips"):
       Column(
       children: [
         Padding(

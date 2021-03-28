@@ -6,6 +6,7 @@ import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/busTripDisplay.dart';
+import 'package:quickbussl/module/emptyView.dart';
 import 'package:quickbussl/module/topBar.dart';
 
 import '../const.dart';
@@ -59,7 +60,10 @@ class _OnGoingState extends State<OnGoing> implements BusTripDisplayListener{
               size: 50.0,
             ),
           ),
-        ):Expanded(
+        ):
+        _widgetList.length ==0?
+        EmptyView(msg: "Did have any ongoing bus trips"):
+        Expanded(
           child: Container(
             child: SingleChildScrollView(
               child: Column(

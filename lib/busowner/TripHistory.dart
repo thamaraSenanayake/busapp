@@ -5,6 +5,7 @@ import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/busTripDisplay.dart';
+import 'package:quickbussl/module/emptyView.dart';
 
 import '../const.dart';
 
@@ -57,7 +58,10 @@ class _TripHistoryState extends State<TripHistory> implements BusTripDisplayList
               size: 50.0,
             ),
           ),
-        ):Expanded(
+        ):
+        _widgetList.length ==0?
+        EmptyView(msg: "Did go a bus trip yet"):
+        Expanded(
           child: Container(
             child: SingleChildScrollView(
               child: Column(
