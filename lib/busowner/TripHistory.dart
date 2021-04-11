@@ -77,7 +77,7 @@ class _TripHistoryState extends State<TripHistory> implements BusTripDisplayList
   @override
   busTripClick(Trip busTrip) {
     // TODO: implement busTripClick
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 
   @override

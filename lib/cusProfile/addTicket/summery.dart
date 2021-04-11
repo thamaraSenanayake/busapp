@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
+import 'package:quickbussl/res/stripeServices.dart';
 import 'package:stripe_payment/stripe_payment.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
@@ -27,44 +29,29 @@ class _SummeryState extends State<Summery> {
   List<Widget> _rowList = [];
   Token _paymentToken;
   double _total = 0.0;
+  bool _loading = false;
 
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<bool> _payment() async {
-    StripePayment.setOptions(
-      StripeOptions(
-        // publishableKey: shop.stripeKey,
-        publishableKey: "pk_test_QY6kL328ODYZL3EXoUUSY2dZ",
-        androidPayMode: 'test', 
-        merchantId: "Test", 
-      ),
-    );
-    String currencyCode;
-    String countryCode;
-    countryCode = "LK";
-    currencyCode = "LKR";
-
-    try{
-      _paymentToken = await StripePayment.paymentRequestWithNativePay(
-        androidPayOptions: AndroidPayPaymentRequest(
-          totalPrice: _total.toString(),
-          currencyCode: currencyCode,
-        ),  
-        applePayOptions: ApplePayPaymentOptions(
-          countryCode: countryCode,
-          currencyCode: currencyCode,
-          items: [
-            ApplePayItem(
-              label: 'Test',
-              amount: _total.toString(),
-            )
+    StripeTransactionResponse response = await StripeService.payWithNewCard(amount:_total.round().toString(),currency:"USD");
+    if(!response.success){
+      showDialog(
+        context: context,
+        builder: (context) => new AlertDialog(
+          title: new Text('Failed to pay for the tickets'),
+          content: new Text(response.message),
+          actions: <Widget>[
+            new GestureDetector(
+              onTap: () => Navigator.of(context).pop(),
+              child: Text("Ok"),
+            ),
           ],
         ),
       );
-    }
-    catch(e){
-      print("error");
-      print(e);
+      return false;
+    }else{
+      return true;
     }
   }
 
@@ -102,20 +89,27 @@ class _SummeryState extends State<Summery> {
   }
 
   _doThePayment() async {
+    setState(() {
+      _loading = true;
+    });
+    if(await _payment()) {
+      await _sendNotification();
 
-    await _payment(); 
-    await _sendNotification();
+      List<String> userList = [];
+      userList = widget.trip.userList;
+      if(!userList.contains(widget.user.email)){
+        userList.add(widget.user.email);
+      }
+      Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
+      setState(() {
+        _loading = false;
+      });
 
-    List<String> userList = [];
-    userList = widget.trip.userList;
-    if(!userList.contains(widget.user.email)){
-      userList.add(widget.user.email);
+      widget.nextPage();
     }
-    Database().bookSeat(widget.trip.seatList, userList, widget.trip.id);
-
-    
-
-    widget.nextPage();
+    setState(() {
+      _loading = false;
+    });
   }
   
   _initSeat(){
@@ -201,6 +195,7 @@ class _SummeryState extends State<Summery> {
   @override
   void initState() {
     super.initState();
+    StripeService.init();
     _initSeat();
   }
   @override
@@ -209,179 +204,192 @@ class _SummeryState extends State<Summery> {
       _width = MediaQuery.of(context).size.width;
       _height = MediaQuery.of(context).size.height;
     });
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-      width: _width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          RichText(
-            text:TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: "Name: ",
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300
-                  ),
-                ),
-                TextSpan(
-                  text: widget.user.name,
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          RichText(
-            text:TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: "Contact num: ",
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300
-                  ),
-                ),
-                TextSpan(
-                  text: widget.user.phone,
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 5,
-          ),
-          RichText(
-            text:TextSpan(
-              children: <TextSpan>[
-                TextSpan(
-                  text: "Email: ",
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w300
-                  ),
-                ),
-                TextSpan(
-                  text: widget.user.email,
-                  style: TextStyle(
-                    color: AppData.blackColor,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height:40
-          ),
-          Padding(
-            padding: const EdgeInsets.only(bottom:10.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 50,
-                  // color: Colors.red,
-                  child:Text(
-                    "Seat No",
-                    style: TextStyle(
-                      color: AppData.blackColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    // color: Colors.green,
-                    child:Text(
-                      "Travel to",
+    return Stack(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+          width: _width,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              RichText(
+                text:TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Name: ",
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w300
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  )
-                ),
-                Expanded(
-                  child: Container(
-                    // color: Colors.indigo,
-                    child:Text(
-                      "Time",
+                    TextSpan(
+                      text: widget.user.name,
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w500
                       ),
-                      textAlign: TextAlign.center,
                     ),
-                  )
+                  ],
                 ),
-                Expanded(
-                  child: Container(
-                    // color: Colors.orange,
-                    child:Text(
-                      "Cost",
-                      style: TextStyle(
-                        color: AppData.blackColor,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  )
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: _height-465,
-            width: _width,
-            child: SingleChildScrollView(
-              child: Column(
-                children: _rowList,
               ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical:10.0),
-            child: Text(
-              "Can't Change the seat number or cancel the booking after payment",
-              style: TextStyle(
-                color: AppData.blackColor,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
+              SizedBox(
+                height: 5,
               ),
-              textAlign: TextAlign.center,
-            ),
-          ),
+              RichText(
+                text:TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Contact num: ",
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300
+                      ),
+                    ),
+                    TextSpan(
+                      text: widget.user.phone,
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 5,
+              ),
+              RichText(
+                text:TextSpan(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: "Email: ",
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300
+                      ),
+                    ),
+                    TextSpan(
+                      text: widget.user.email,
+                      style: TextStyle(
+                        color: AppData.blackColor,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w500
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height:40
+              ),
+              Padding(
+                padding: const EdgeInsets.only(bottom:10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      width: 50,
+                      // color: Colors.red,
+                      child:Text(
+                        "Seat No",
+                        style: TextStyle(
+                          color: AppData.blackColor,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        // color: Colors.green,
+                        child:Text(
+                          "Travel to",
+                          style: TextStyle(
+                            color: AppData.blackColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: Container(
+                        // color: Colors.indigo,
+                        child:Text(
+                          "Time",
+                          style: TextStyle(
+                            color: AppData.blackColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ),
+                    Expanded(
+                      child: Container(
+                        // color: Colors.orange,
+                        child:Text(
+                          "Cost",
+                          style: TextStyle(
+                            color: AppData.blackColor,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      )
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: _height-465,
+                width: _width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: _rowList,
+                  ),
+                ),
+              ),
 
-          CustomButton(text: "Pay now", buttonClick: (){_doThePayment();})
-          
-        ],
-      ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical:10.0),
+                child: Text(
+                  "Can't Change the seat number or cancel the booking after payment",
+                  style: TextStyle(
+                    color: AppData.blackColor,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+
+              CustomButton(text: "Pay now", buttonClick: (){_doThePayment();})
+              
+            ],
+          ),
+        ),
+
+        _loading?Container(
+          height: _height-168,
+          color: Color.fromRGBO(128, 128, 128, 0.3),
+          child: SpinKitDoubleBounce(
+            color: AppData.primaryColor2,
+            size: 50.0,
+          ),
+        ):Container()
+      ],
     );
   }
 }
