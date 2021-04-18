@@ -192,10 +192,12 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                       ],
                     )
                   ],
-                ):Container(
+                ):Container(),
+                
+                Container(
                   padding: EdgeInsets.symmetric(vertical: 10),
                   child:Text(
-                    'Traveled date '+DateFormat.yMEd().format(widget.busTrip.travelDate) ,
+                    (widget.busTrip.endTime.difference(DateTime.now()).inSeconds>1?'Traveling date ':'Traveled date ')+DateFormat.yMEd().format(widget.busTrip.travelDate) ,
                     style: TextStyle(
                       color: AppData.blackColor,
                       fontSize: 16,

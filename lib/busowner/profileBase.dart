@@ -123,11 +123,9 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                         _bottomBarVisibility?Container(
                           height: 50,
                           color: AppData.primaryColor,
+                          // color:Colors.black,
                           child: TabBar(
-                            indicatorColor:AppData.whiteColor,
-                            indicatorWeight: 4,
-                            indicatorPadding: EdgeInsets.symmetric(horizontal: 20),
-                            indicatorSize:TabBarIndicatorSize.tab,
+                            indicatorColor:Colors.transparent,
                             onTap: (val){
                               if (val == 0) {
                                 _tabController.animateTo(0);
@@ -151,7 +149,7 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 _tabController.animateTo(2);
                                 if(mounted){
                                   setState(() {
-                                      _title = "Trip History";
+                                    _title = "Trip History";
                                     _profilePage = BusOwnerPages.PastTrip;
                                   });
                                 } 
@@ -159,10 +157,11 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                             },
                             tabs: [
                               Tab(
-                                child: Container(
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds:500),
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != BusOwnerPages.AddTrip?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.add_alert_outlined,
                                     color:AppData.whiteColor,
@@ -171,10 +170,11 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 ),
                               ),
                               Tab(
-                                child: Container(
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds:500),
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != BusOwnerPages.OnGoing?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.check_circle,
                                     color:AppData.whiteColor,
@@ -183,10 +183,11 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                                 ),
                               ),
                               Tab(
-                                child: Container(
+                                child: AnimatedContainer(
+                                  duration: Duration(milliseconds:500),
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != BusOwnerPages.PastTrip?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.history,
                                     color:AppData.whiteColor,
@@ -428,10 +429,28 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
   moveToPage(BusOwnerPages page) {
     if(BusOwnerPages.AddTrip == page){
       _tabController.animateTo(0);
+      if(mounted){
+        setState(() {
+          _title = "Add Trip";
+          _profilePage = BusOwnerPages.AddTrip;
+        });
+      }
     }else if(BusOwnerPages.OnGoing == page){
       _tabController.animateTo(1);
+      if(mounted){
+        setState(() {
+          _title = "Trips to Go";
+          _profilePage = BusOwnerPages.OnGoing;
+        });
+      } 
     }else if(BusOwnerPages.PastTrip == page){
       _tabController.animateTo(2);
+      if(mounted){
+        setState(() {
+            _title = "Trip History";
+          _profilePage = BusOwnerPages.PastTrip;
+        });
+      }
     }
   }
 

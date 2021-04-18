@@ -58,6 +58,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
       child: WillPopScope(
         onWillPop:_onBackPressed,
         child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          resizeToAvoidBottomPadding: false,
           key: _scaffoldKey,
           drawer: Theme(
             data: Theme.of(context).copyWith(
@@ -120,9 +122,7 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                           height: 50,
                           color: AppData.primaryColor,
                           child: TabBar(
-                            indicatorColor:AppData.whiteColor,
-                            indicatorWeight: 4,
-                            indicatorPadding: EdgeInsets.symmetric(horizontal: 20),
+                            indicatorColor:Colors.transparent,
                             indicatorSize:TabBarIndicatorSize.tab,
                             onTap: (val){
                               if (val == 0) {
@@ -154,8 +154,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                               Tab(
                                 child: Container(
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != CusProfilePages.Add?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.add_alert_outlined,
                                     color:AppData.whiteColor,
@@ -166,8 +166,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                               Tab(
                                 child: Container(
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != CusProfilePages.BookedTrip?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.check_circle,
                                     color:AppData.whiteColor,
@@ -178,8 +178,8 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                               Tab(
                                 child: Container(
                                   height: 80,
-                                  width: 80,
-                                  color: AppData.primaryColor,
+                                  width: _width/3,
+                                  color:_profilePage != CusProfilePages.BookedHistory?AppData.primaryColor:AppData.primaryColor2,
                                   child: Icon(
                                     Icons.history,
                                     color:AppData.whiteColor,
@@ -421,10 +421,25 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
   moveToPage(CusProfilePages page) {
     if(CusProfilePages.SelectLocation == page){
       _tabController.animateTo(0);
+      if(mounted){
+        setState(() {
+          _profilePage = CusProfilePages.Add;
+        });
+      } 
     }else if(CusProfilePages.BookedTrip == page){
       _tabController.animateTo(1);
+      if(mounted){
+        setState(() {
+          _profilePage = CusProfilePages.BookedTrip;
+        });
+      } 
     }else if(CusProfilePages.BookedHistory == page){
       _tabController.animateTo(2);
+      if(mounted){
+        setState(() {
+          _profilePage = CusProfilePages.BookedHistory;
+        });
+      }
     }
   }
 

@@ -1,11 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:google_api_headers/google_api_headers.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_webservice/places.dart';
 import 'package:intl/intl.dart';
 import 'package:quickbussl/busowner/profileBase.dart';
 import 'package:quickbussl/database/apiCall.dart';

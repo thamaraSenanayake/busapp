@@ -6,7 +6,7 @@ import 'package:quickbussl/database/database.dart';
 import 'package:quickbussl/model/user.dart';
 import 'package:quickbussl/module/customButton.dart';
 import 'package:quickbussl/module/textbox.dart';
-
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import '../const.dart';
 
 class CusLogin extends StatefulWidget {
@@ -26,6 +26,8 @@ class _CusLoginState extends State<CusLogin> {
   double _width =0.0;
   double _height =0.0;
   bool _loading = false;
+  bool _keyBoardVisibility = false;
+
 
   _login() async {
     FocusScope.of(context).unfocus();
@@ -71,6 +73,13 @@ class _CusLoginState extends State<CusLogin> {
   @override
   void initState() {
     super.initState();
+    KeyboardVisibility.onChange.listen((bool visible) {
+      if(mounted){
+        setState(() {
+          _keyBoardVisibility = visible;
+        });
+      } 
+    });
   }
 
   @override
@@ -105,169 +114,173 @@ class _CusLoginState extends State<CusLogin> {
             width :_width,
             height :_height,
             child: SafeArea(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Stack(
                 children: [
-                  Column(
-                    children: [
-                      Container(
-                        width: _width,
-                        height: 50,
-                        padding: EdgeInsets.symmetric(horizontal:20),
-                        // color: Colors.black,
-                        child: Stack(
-                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          // crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: GestureDetector(
-                                onTap: (){
-                                  widget.goToPage(LoginPageList.SplashScreen);
-                                },
-                                child: Container(
-                                  child: Icon(
-                                    Icons.arrow_back,
-                                    size: 35,
-                                    color: AppData.primaryColor,
+                  Container(
+                    width: _width,
+                    height: 50,
+                    padding: EdgeInsets.symmetric(horizontal:20),
+                    // color: Colors.black,
+                    child: Stack(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: GestureDetector(
+                            onTap: (){
+                              widget.goToPage(LoginPageList.SplashScreen);
+                            },
+                            child: Container(
+                              child: Icon(
+                                Icons.arrow_back,
+                                size: 35,
+                                color: AppData.primaryColor,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            "Login",
+                            style: TextStyle(
+                              color: AppData.primaryColor,
+                              fontSize: 35,
+                              fontWeight: FontWeight.w700
+                            ),
+                          ),
+                        ),
+                        Container()
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top:50.0,left:20,right:20),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0,bottom: 5),
+                            child: Container(
+                              width: _width - 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Email: ",
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      backgroundColor: Colors.white
+                                    ),
                                   ),
-                                ),
+                                  Text(
+                                    _emailError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Text(
-                                "Login",
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 35,
-                                  fontWeight: FontWeight.w700
-                                ),
+                          ),
+                          TextBox(
+                            textBoxKey: null, 
+                            onChange: (val){
+                              _email = val;
+                            setState(() {
+                                _emailError = "";
+                              });
+                            }, 
+                            textInputType:TextInputType.emailAddress,
+                            firstLetterCapital: false,
+                            errorText: _emailError
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top:10.0,bottom: 5),
+                            child: Container(
+                              width: _width - 40,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Password: ",
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w500,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  ),
+                                  Text(
+                                    _passwordError,
+                                    style: TextStyle(
+                                      color: AppData.primaryColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      backgroundColor: Colors.white
+                                    ),
+                                  )
+                                ],
                               ),
                             ),
-                            Container()
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:10.0,bottom: 5),
-                        child: Container(
-                          width: _width - 40,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Email: ",
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  backgroundColor: Colors.white
-                                ),
-                              ),
-                              Text(
-                                _emailError,
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  backgroundColor: Colors.white
-                                ),
-                              )
-                            ],
                           ),
-                        ),
-                      ),
-                      TextBox(
-                        textBoxKey: null, 
-                        onChange: (val){
-                          _email = val;
-                         setState(() {
-                            _emailError = "";
-                          });
-                        }, 
-                        textInputType:TextInputType.emailAddress,
-                        firstLetterCapital: false,
-                        errorText: _emailError
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top:10.0,bottom: 5),
-                        child: Container(
-                          width: _width - 40,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "Password: ",
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w500,
-                                  backgroundColor: Colors.white
-                                ),
-                              ),
-                              Text(
-                                _passwordError,
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  backgroundColor: Colors.white
-                                ),
-                              )
-                            ],
+                          TextBox(
+                            textBoxKey: null, 
+                            onChange: (val){
+                              _password = val;
+                            setState(() {
+                                _passwordError = "";
+                              });
+                            }, 
+                            obscureText: true,
+                            errorText: _passwordError
                           ),
-                        ),
-                      ),
-                      TextBox(
-                        textBoxKey: null, 
-                        onChange: (val){
-                          _password = val;
-                         setState(() {
-                            _passwordError = "";
-                          });
-                        }, 
-                        obscureText: true,
-                        errorText: _passwordError
-                      ),
 
+                          Text(
+                            _loginError,
+                            style: TextStyle(
+                              color: AppData.primaryColor,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              backgroundColor: Colors.white
+                            ),
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          SizedBox(
+                            height:_keyBoardVisibility?50: _height-420,
+                          ),
+                          CustomButton(
+                            text: "Login", 
+                            buttonClick: (){
+                              _login();
+                            }
+                          ),
+                          SizedBox(
+                            height: 20,
+                          ),
+                          CustomButton(
+                            text: "Sing In", 
+                            buttonClick: (){
+                              widget.goToPage(LoginPageList.CusSignin);
+                            }
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
 
-                    ],
+                        ],
+                      ),
+                    ),
                   ),
-                  Column(
-                    children: [
-                      Text(
-                        _loginError,
-                        style: TextStyle(
-                          color: AppData.primaryColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          backgroundColor: Colors.white
-                        ),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CustomButton(
-                        text: "Login", 
-                        buttonClick: (){
-                          _login();
-                        }
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      CustomButton(
-                        text: "Sing In", 
-                        buttonClick: (){
-                          widget.goToPage(LoginPageList.CusSignin);
-                        }
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                    ],
-                  ),
+
                 ],
               ),
             ),
