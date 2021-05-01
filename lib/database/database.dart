@@ -36,6 +36,48 @@ class Database{
     return _setUser(querySnapshot);
   }
 
+  Future<List<User>> getUserList(String email ) async{
+    QuerySnapshot querySnapshot;
+    List<User> userList = [];
+    querySnapshot = await users
+    .where("userType" , isEqualTo : TypeConvert().userTypeToString(UserType.Admin))
+    .getDocuments();
+    userList = _setUserList(querySnapshot);
+
+    querySnapshot = await users
+    .where("userType" , isEqualTo : TypeConvert().userTypeToString(UserType.Passenger))
+    .getDocuments();
+
+    userList.addAll(_setUserList(querySnapshot));
+      
+
+    userList.removeWhere((item) => item.email == email);
+    return userList;
+  }
+
+  adminEdit(String email,bool isAdmin) async{
+    await users.document(email).updateData({
+      "userType":isAdmin? TypeConvert().userTypeToString(UserType.Admin):TypeConvert().userTypeToString(UserType.Passenger),
+    });
+  }
+
+  List<User> _setUserList(QuerySnapshot querySnapshot)  {
+    List<User> user = [];
+    for (var item in querySnapshot.documents) {
+      
+      user.add( 
+        User()
+        ..email = item["email"]
+        ..name = item["name"]
+        ..idNum = item["idNum"]
+        ..phone = item["phone"]
+        ..userType =TypeConvert().stringToUserType(item["userType"])
+      );
+    }
+
+    return user;
+  }
+
   Future<User> _setUser(QuerySnapshot querySnapshot) async {
     User user;
     for (var item in querySnapshot.documents) {
@@ -59,6 +101,14 @@ class Database{
       "idNum":user.idNum,
       "phone":user.phone,
       "userType":TypeConvert().userTypeToString( user.userType),
+    });
+  }
+
+  Future addBusOwnerUser(User user) async{
+    await users.document(user.email).setData({
+      "email":user.email,
+      "password":user.password,
+      "userType":TypeConvert().userTypeToString(UserType.BusOwner),
     });
   }
 

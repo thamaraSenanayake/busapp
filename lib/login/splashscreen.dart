@@ -30,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
       User user =await Database().login(username, password);
 
       if(user != null){
-        if(user.userType == UserType.Passenger){
+        if(user.userType == UserType.Passenger || user.userType == UserType.Admin){
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(

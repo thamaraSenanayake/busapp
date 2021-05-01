@@ -50,7 +50,7 @@ class _CusLoginState extends State<CusLogin> {
         _loginError = "";
       });
       User user = await Database().login(_email, _password);
-      if(user != null && user.userType == UserType.Passenger){
+      if(user != null && (user.userType == UserType.Passenger || user.userType == UserType.Admin)){
         final storage = new FlutterSecureStorage();
         storage.write(key: KeyContainer.USERNAME,value: _email);
         storage.write(key: KeyContainer.PASSWORD,value: _password);
@@ -156,14 +156,14 @@ class _CusLoginState extends State<CusLogin> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:50.0,left:20,right:20),
+                    padding: const EdgeInsets.only(top:50.0,left:0,right:0),
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(top:10.0,bottom: 5),
+                            padding: const EdgeInsets.only(top:10.0,bottom: 5,left: 20),
                             child: Container(
-                              width: _width - 40,
+                              width: _width,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
@@ -242,20 +242,26 @@ class _CusLoginState extends State<CusLogin> {
                             errorText: _passwordError
                           ),
 
-                          Text(
-                            _loginError,
-                            style: TextStyle(
-                              color: AppData.primaryColor,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              backgroundColor: Colors.white
+                          Container(
+                            width: _width-40,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:8.0),
+                              child: Text(
+                                _loginError,
+                                style: TextStyle(
+                                  color: AppData.primaryColor,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  backgroundColor: Colors.white
+                                ),
+                              ),
                             ),
                           ),
                           SizedBox(
                             height: 20,
                           ),
                           SizedBox(
-                            height:_keyBoardVisibility?50: _height-420,
+                            height:_keyBoardVisibility?50: _height-_height/1.8,
                           ),
                           CustomButton(
                             text: "Login", 

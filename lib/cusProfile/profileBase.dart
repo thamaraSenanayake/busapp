@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:quickbussl/appBarWindows/aboutUs.dart';
+import 'package:quickbussl/appBarWindows/addBusOwner.dart';
+import 'package:quickbussl/appBarWindows/editAdminList.dart';
 import 'package:quickbussl/appBarWindows/editDetails.dart';
 import 'package:quickbussl/appBarWindows/passwordChange.dart';
 import 'package:quickbussl/cusProfile/addTicket/addTicket.dart';
@@ -59,7 +61,7 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
         onWillPop:_onBackPressed,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          resizeToAvoidBottomPadding: false,
+          //resizeToAvoidBottomPadding: false,
           key: _scaffoldKey,
           drawer: Theme(
             data: Theme.of(context).copyWith(
@@ -318,6 +320,48 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                 );
               },
             ),
+            widget.user.userType == UserType.Admin?ListTile(
+              title: Text(
+                "Add Bus Owner",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.bus_alert,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => AddBusOwner(
+                      
+                    ),
+                    opaque: false
+                  ),
+                );
+              },
+            ):Container(),
+            widget.user.userType == UserType.Admin?ListTile(
+              title: Text(
+                "Add Admin",
+                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ),
+              trailing: Icon(
+                Icons.admin_panel_settings,
+                color: AppData.blackColor,
+              ),
+              onTap:() {
+                _scaffoldKey.currentState.openEndDrawer();
+                Navigator.of(context).push(
+                  PageRouteBuilder(
+                    pageBuilder: (context, _, __) => EditAdminList(
+                      user: widget.user,
+                    ),
+                    opaque: false
+                  ),
+                );
+              },
+            ):Container(),
             ListTile(
               title: Text(
                 "Change password",

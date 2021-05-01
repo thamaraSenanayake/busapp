@@ -116,7 +116,7 @@ class _TextBoxState extends State<TextBox> {
             size: widget.prefixIcon == Icons.attach_money?21:24,
             color: AppData.primaryColor,
           ) : null,
-          hintStyle:TextStyle(fontSize: 14, color: AppData.whiteColor, height: 1.8),
+          hintStyle:TextStyle(fontSize: 14, color: Colors.grey, height: 1.8),
           suffixIcon: widget.suffixIcon != null ? Icon(widget.suffixIcon) : null,
         ),
         maxLines: widget.textInputType == TextInputType.multiline?null:1,

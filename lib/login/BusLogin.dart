@@ -49,7 +49,7 @@ class _BusLoginState extends State<BusLogin> {
       });
       User user = await Database().login(_email, _password);
       if(user != null && user.userType == UserType.BusOwner){
-        if(user.name.isNotEmpty && user.name != null){
+        if(user.name != null && user.name.isNotEmpty){
           final storage = new FlutterSecureStorage();
           storage.write(key: KeyContainer.USERNAME,value: _email);
           storage.write(key: KeyContainer.PASSWORD,value: _password);
