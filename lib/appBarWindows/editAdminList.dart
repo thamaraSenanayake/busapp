@@ -20,6 +20,7 @@ class _EditAdminListState extends State<EditAdminList> implements UserViewListen
   List<User> _user = [];
   List<Widget> _widgetList = [];
   bool _loading = true;
+  List<User> _userList = [];
   
   @override
   void initState() { 
@@ -27,11 +28,19 @@ class _EditAdminListState extends State<EditAdminList> implements UserViewListen
     _loadData();
   }
 
-  _loadData() async {
-    List<Widget> _widgetListTemp = [];
-    List<User> _userList = await Database().getUserList(widget.user.email);
+  _searchList(val){
+    List<User> searchList =  _userList.where((item) => item.name.toLowerCase().contains(val.toLowerCase())).toList();
+    _buildList(searchList);
+  }
 
-    for (var item in _userList) {
+  _loadData() async {
+    _userList = await Database().getUserList(widget.user.email);
+    _buildList(_userList);
+  }
+
+  _buildList(List<User> list){
+    List<Widget> _widgetListTemp = [];
+    for (var item in list) {
       if(item.name == null){
         continue;
       }
@@ -43,6 +52,7 @@ class _EditAdminListState extends State<EditAdminList> implements UserViewListen
       _widgetList = _widgetListTemp;
       _loading = false;
     });
+
   }
 
   @override
@@ -67,7 +77,7 @@ class _EditAdminListState extends State<EditAdminList> implements UserViewListen
               shadowDisplay: false,
               textBoxHint: "Search",
               onChange: (val){
-                
+                _searchList(val);
               }, 
               textInputType:TextInputType.emailAddress,
               firstLetterCapital: false,

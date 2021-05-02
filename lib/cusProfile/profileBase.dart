@@ -283,179 +283,181 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
       Container(
         height: _height-300,
         color: AppData.whiteColor,
-        child: Column(
-          children: [
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
 
-            Container(
-              color: AppData.primaryColor,
-              child: Padding(
-                padding:  EdgeInsets.symmetric(horizontal: 10.0),
-                child: Container(
-                  color: AppData.blackColor,
-                  height: 5,
+              Container(
+                color: AppData.primaryColor,
+                child: Padding(
+                  padding:  EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Container(
+                    color: AppData.blackColor,
+                    height: 5,
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: 20,
-            ),
-            ListTile(
-              title: Text(
-                "Edit Details",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              SizedBox(
+                height: 20,
               ),
-              trailing: Icon(
-                Icons.description,
-                color: AppData.blackColor,
-              ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => EditUserDetails(
-                      user: widget.user,
+              ListTile(
+                title: Text(
+                  "Edit Details",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.description,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => EditUserDetails(
+                        user: widget.user,
+                      ),
+                      opaque: false
                     ),
-                    opaque: false
-                  ),
-                );
-              },
-            ),
-            widget.user.userType == UserType.Admin?ListTile(
-              title: Text(
-                "Add Bus Owner",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                  );
+                },
               ),
-              trailing: Icon(
-                Icons.bus_alert,
-                color: AppData.blackColor,
-              ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => AddBusOwner(
-                      
+              widget.user.userType == UserType.Admin?ListTile(
+                title: Text(
+                  "Add Bus Owner",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.bus_alert,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => AddBusOwner(
+                        
+                      ),
+                      opaque: false
                     ),
-                    opaque: false
-                  ),
-                );
-              },
-            ):Container(),
-            widget.user.userType == UserType.Admin?ListTile(
-              title: Text(
-                "Add Admin",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
-              ),
-              trailing: Icon(
-                Icons.admin_panel_settings,
-                color: AppData.blackColor,
-              ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => EditAdminList(
-                      user: widget.user,
+                  );
+                },
+              ):Container(),
+              widget.user.userType == UserType.Admin?ListTile(
+                title: Text(
+                  "Add Admin",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.admin_panel_settings,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => EditAdminList(
+                        user: widget.user,
+                      ),
+                      opaque: false
                     ),
-                    opaque: false
-                  ),
-                );
-              },
-            ):Container(),
-            ListTile(
-              title: Text(
-                "Change password",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
-              ),
-              trailing: Icon(
-                Icons.enhanced_encryption,
-                color: AppData.blackColor,
-              ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => UpdatePassword(
-                      user: widget.user,
+                  );
+                },
+              ):Container(),
+              ListTile(
+                title: Text(
+                  "Change password",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.enhanced_encryption,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => UpdatePassword(
+                        user: widget.user,
+                      ),
+                      opaque: false
                     ),
-                    opaque: false
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                "Privacy Policy",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                  );
+                },
               ),
-              trailing: Icon(
-                Icons.privacy_tip,
-                color: AppData.blackColor,
+              ListTile(
+                title: Text(
+                  "Privacy Policy",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.privacy_tip,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => AboutUs(),
+                      opaque: false
+                    ),
+                  );
+                },
               ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => AboutUs(),
-                    opaque: false
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                "About us",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ListTile(
+                title: Text(
+                  "About us",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.info,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  Navigator.of(context).push(
+                    PageRouteBuilder(
+                      pageBuilder: (context, _, __) => AboutUs(),
+                      opaque: false
+                    ),
+                  );
+                },
               ),
-              trailing: Icon(
-                Icons.info,
-                color: AppData.blackColor,
+              ListTile(
+                title: Text(
+                  "Rate us",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.rate_review,
+                  color: AppData.blackColor,
+                ),
+                onTap:() {
+                  _scaffoldKey.currentState.openEndDrawer();
+                },
               ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-                Navigator.of(context).push(
-                  PageRouteBuilder(
-                    pageBuilder: (context, _, __) => AboutUs(),
-                    opaque: false
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              title: Text(
-                "Rate us",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
+              ListTile(
+                title: Text(
+                  "Log Out",
+                  style: TextStyle(color: AppData.blackColor, fontSize: 15),
+                ),
+                trailing: Icon(
+                  Icons.exit_to_app,
+                  color: AppData.blackColor,
+                ),
+                onTap:() async {
+                  _scaffoldKey.currentState.openEndDrawer();
+                  final storage = new FlutterSecureStorage();
+                  await storage.deleteAll();
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => LoginBase(),
+                    )
+                  );
+                },
               ),
-              trailing: Icon(
-                Icons.rate_review,
-                color: AppData.blackColor,
-              ),
-              onTap:() {
-                _scaffoldKey.currentState.openEndDrawer();
-              },
-            ),
-            ListTile(
-              title: Text(
-                "Log Out",
-                style: TextStyle(color: AppData.blackColor, fontSize: 15),
-              ),
-              trailing: Icon(
-                Icons.exit_to_app,
-                color: AppData.blackColor,
-              ),
-              onTap:() async {
-                _scaffoldKey.currentState.openEndDrawer();
-                final storage = new FlutterSecureStorage();
-                await storage.deleteAll();
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => LoginBase(),
-                  )
-                );
-              },
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     ];

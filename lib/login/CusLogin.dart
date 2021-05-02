@@ -157,133 +157,142 @@ class _CusLoginState extends State<CusLogin> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top:50.0,left:0,right:0),
-                    child: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.only(top:10.0,bottom: 5,left: 20),
-                            child: Container(
-                              width: _width,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Email: ",
-                                    style: TextStyle(
-                                      color: AppData.primaryColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      backgroundColor: Colors.white
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top:10.0,bottom: 5,left: 20),
+                              child: Container(
+                                width: _width,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Email: ",
+                                      style: TextStyle(
+                                        color: AppData.primaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        backgroundColor: Colors.white
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    _emailError,
-                                    style: TextStyle(
-                                      color: AppData.primaryColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      backgroundColor: Colors.white
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          TextBox(
-                            textBoxKey: null, 
-                            onChange: (val){
-                              _email = val;
-                            setState(() {
-                                _emailError = "";
-                              });
-                            }, 
-                            textInputType:TextInputType.emailAddress,
-                            firstLetterCapital: false,
-                            errorText: _emailError
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top:10.0,bottom: 5),
-                            child: Container(
-                              width: _width - 40,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    "Password: ",
-                                    style: TextStyle(
-                                      color: AppData.primaryColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                      backgroundColor: Colors.white
-                                    ),
-                                  ),
-                                  Text(
-                                    _passwordError,
-                                    style: TextStyle(
-                                      color: AppData.primaryColor,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      backgroundColor: Colors.white
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                          TextBox(
-                            textBoxKey: null, 
-                            onChange: (val){
-                              _password = val;
-                            setState(() {
-                                _passwordError = "";
-                              });
-                            }, 
-                            obscureText: true,
-                            errorText: _passwordError
-                          ),
-
-                          Container(
-                            width: _width-40,
-                            child: Padding(
-                              padding: const EdgeInsets.only(top:8.0),
-                              child: Text(
-                                _loginError,
-                                style: TextStyle(
-                                  color: AppData.primaryColor,
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  backgroundColor: Colors.white
+                                    Text(
+                                      _emailError,
+                                      style: TextStyle(
+                                        color: AppData.primaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        backgroundColor: Colors.white
+                                      ),
+                                    )
+                                  ],
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          SizedBox(
-                            height:_keyBoardVisibility?50: _height-_height/1.8,
-                          ),
-                          CustomButton(
-                            text: "Login", 
-                            buttonClick: (){
-                              _login();
-                            }
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          CustomButton(
-                            text: "Sing In", 
-                            buttonClick: (){
-                              widget.goToPage(LoginPageList.CusSignin);
-                            }
-                          ),
-                          SizedBox(
-                            height: 10,
-                          ),
+                            TextBox(
+                              textBoxKey: null, 
+                              onChange: (val){
+                                _email = val;
+                              setState(() {
+                                  _emailError = "";
+                                });
+                              }, 
+                              textInputType:TextInputType.emailAddress,
+                              firstLetterCapital: false,
+                              errorText: _emailError
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top:10.0,bottom: 5),
+                              child: Container(
+                                width: _width - 40,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      "Password: ",
+                                      style: TextStyle(
+                                        color: AppData.primaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
+                                        backgroundColor: Colors.white
+                                      ),
+                                    ),
+                                    Text(
+                                      _passwordError,
+                                      style: TextStyle(
+                                        color: AppData.primaryColor,
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        backgroundColor: Colors.white
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                            TextBox(
+                              textBoxKey: null, 
+                              onChange: (val){
+                                _password = val;
+                              setState(() {
+                                  _passwordError = "";
+                                });
+                              }, 
+                              obscureText: true,
+                              errorText: _passwordError
+                            ),
 
-                        ],
-                      ),
+                            Container(
+                              width: _width-40,
+                              child: Padding(
+                                padding: const EdgeInsets.only(top:8.0),
+                                child: Text(
+                                  _loginError,
+                                  style: TextStyle(
+                                    color: AppData.primaryColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    backgroundColor: Colors.white
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            CustomButton(
+                              text: "Login", 
+                              buttonClick: (){
+                                _login();
+                              }
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            CustomButton(
+                              text: "Sing In", 
+                              buttonClick: (){
+                                widget.goToPage(LoginPageList.CusSignin);
+                              }
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+
+                          ],
+                        )
+                        // SizedBox(
+                        //   height:_keyBoardVisibility?50: _height-_height/1.8,
+                        // ),
+
+                      ],
                     ),
                   ),
 

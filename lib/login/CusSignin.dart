@@ -416,14 +416,14 @@ class _CusSigningState extends State<CusSigning> {
                             obscureText: true,
                             errorText: _confirmPasswordError
                           ),
-                          SizedBox(
-                            height: 50,
-                          ),
+                          // SizedBox(
+                          //   height: 50,
+                          // ),
                         ],
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 20),
+                      padding: const EdgeInsets.symmetric(horizontal: 40,vertical: 10),
                       child: Text(
                         _passwordValidationError,
                         style: TextStyle(

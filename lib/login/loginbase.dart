@@ -101,7 +101,7 @@ class _LoginBaseState extends State<LoginBase> {
       _height = MediaQuery.of(context).size.height;
     });
     return Scaffold(
-      // resizeToAvoidBottomPadding: false,
+      resizeToAvoidBottomInset:_currentPage == LoginPageList.CusSignin || _currentPage == LoginPageList.BusAddDetails?true:false,
       body:Container(
           child: Stack(
             children: [
