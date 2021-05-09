@@ -252,7 +252,7 @@ class _BusOwnerProfileState extends State<BusOwnerProfile> with TickerProviderSt
                   child: Container(
                       height: 120,
                       child: Image.asset(
-                        'assets/logo.jpeg',
+                        'assets/logo.png',
                         fit: BoxFit.fill,
                       )),
                 ),

@@ -34,7 +34,7 @@ class _SummeryState extends State<Summery> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<bool> _payment() async {
-    StripeTransactionResponse response = await StripeService.payWithNewCard(amount:_total.round().toString(),currency:"USD");
+    StripeTransactionResponse response = await StripeService.payWithNewCard(amount:((_total*100).round()).toString(),currency:"usd");
     if(!response.success){
       showDialog(
         context: context,
@@ -104,7 +104,7 @@ class _SummeryState extends State<Summery> {
       setState(() {
         _loading = false;
       });
-
+      await showAlertDialog(context,"Done","Payment is successful");
       widget.nextPage();
     }
     setState(() {
@@ -392,6 +392,48 @@ class _SummeryState extends State<Summery> {
           ),
         ):Container()
       ],
+    );
+  }
+
+  showAlertDialog(BuildContext context,String msg,String title) async {
+
+    // set up the button
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 15,
+          fontWeight: FontWeight.w700
+        ),
+      ),
+      content: Text(
+        msg,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 15,
+          fontWeight: FontWeight.w500
+        ),
+      ),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

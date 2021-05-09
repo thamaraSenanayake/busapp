@@ -60,7 +60,7 @@ class _TripHistoryState extends State<TripHistory> implements BusTripDisplayList
           ),
         ):
         _widgetList.length ==0?
-        EmptyView(msg: "Did go a bus trip yet"):
+        EmptyView(msg: "Didn't go a bus trip yet"):
         Expanded(
           child: Container(
             child: SingleChildScrollView(

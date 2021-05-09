@@ -69,7 +69,7 @@ class _BookedHistoryState extends State<BookedHistory> implements BusTripDisplay
           ),
         ):
         _widgetList.length ==0?
-        EmptyView(msg: "Did go a bus trip yet"):
+        EmptyView(msg: "Didn't go a bus trip yet"):
         Expanded(
           child: Container(
             child: SingleChildScrollView(

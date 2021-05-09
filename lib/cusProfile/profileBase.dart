@@ -13,6 +13,7 @@ import 'package:quickbussl/login/loginbase.dart';
 import 'package:quickbussl/model/trip.dart';
 import 'package:quickbussl/model/user.dart';
 
+import '../appBarWindows/privacyPolicy.dart';
 import '../const.dart';
 
 class CusProfile extends StatefulWidget {
@@ -246,7 +247,7 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                   child: Container(
                       height: 120,
                       child: Image.asset(
-                        'assets/logo.jpeg',
+                        'assets/logo.png',
                         fit: BoxFit.fill,
                       )),
                 ),
@@ -397,7 +398,7 @@ class _CusProfileState extends State<CusProfile> with TickerProviderStateMixin i
                   _scaffoldKey.currentState.openEndDrawer();
                   Navigator.of(context).push(
                     PageRouteBuilder(
-                      pageBuilder: (context, _, __) => AboutUs(),
+                      pageBuilder: (context, _, __) => PrivacyPolicy(),
                       opaque: false
                     ),
                   );

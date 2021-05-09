@@ -378,14 +378,15 @@ class _BusTripDisplayState extends State<BusTripDisplay> {
                   width: _width -40,
                   child: Center(
                     child: Text(
-                      widget.userType == UserType.Passenger? "Total distance:Km $_totalDistance \n Full Ticket price:Rs $_ticketPrice/=":
+                      widget.userType != UserType.BusOwner? "Total distance:Km $_totalDistance \n Full Ticket price:Rs $_ticketPrice/=":
                       "Total income from trip: Rs "+ _income.toStringAsFixed(2),
                       style: TextStyle(
                         color: AppData.blackColor,
                         fontSize: 18,
                         height: 1.5,
-                        fontWeight: FontWeight.w500
+                        fontWeight: FontWeight.w500,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

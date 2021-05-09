@@ -118,7 +118,7 @@ class _SplashScreenState extends State<SplashScreen> {
                         image: new DecorationImage(
                           fit: BoxFit.cover,
                           image: new AssetImage(
-                            "assets/logo.jpeg",
+                            "assets/logo.png",
                           ),
                         ),
                       ),
