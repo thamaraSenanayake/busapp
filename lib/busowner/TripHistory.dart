@@ -34,7 +34,7 @@ class _TripHistoryState extends State<TripHistory> implements BusTripDisplayList
     _tripList = await Database().pastTripBusOwner(widget.user.email);
     for (var item in _tripList) {
       _widgetList.add(
-        BusTripDisplay(busTrip: item, listener: this, userType: null,)
+        BusTripDisplay(busTrip: item, listener: this, userType: widget.user.userType,)
       );
     }
     _loading = false;
@@ -83,6 +83,6 @@ class _TripHistoryState extends State<TripHistory> implements BusTripDisplayList
   @override
   locationGetOrSet(Trip busTrip) {
     // TODO: implement locationGetOrSet
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }

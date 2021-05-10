@@ -86,12 +86,12 @@ class _BookedHistoryState extends State<BookedHistory> implements BusTripDisplay
   @override
   busTripClick(Trip busTrip) {
     // TODO: implement busTripClick
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 
   @override
   locationGetOrSet(Trip busTrip) {
     // TODO: implement locationGetOrSet
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }

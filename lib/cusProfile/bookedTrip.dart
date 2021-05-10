@@ -94,6 +94,6 @@ class _BookedTripState extends State<BookedTrip> implements BusTripDisplayListen
   @override
   locationGetOrSet(Trip busTrip) {
     // TODO: implement locationGetOrSet
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }

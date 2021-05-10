@@ -70,6 +70,6 @@ class _SelectBusState extends State<SelectBus> implements BusTripDisplayListener
   @override
   locationGetOrSet(Trip busTrip) {
     // TODO: implement locationGetOrSet
-    throw UnimplementedError();
+    // throw UnimplementedError();
   }
 }
